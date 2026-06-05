@@ -40,7 +40,7 @@ export default function RubberStamp({
   const inner = (
     <span
       style={{
-        fontFamily: "'Nunito', sans-serif",
+        fontFamily: "'Lato', system-ui, sans-serif",
         fontWeight: 900,
         letterSpacing: '0.04em',
         fontSize: s.font,
