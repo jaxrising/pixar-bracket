@@ -27,7 +27,6 @@ import PlayerRoster from '../components/host/PlayerRoster'
 import RoomCodeBadge from '../components/shared/RoomCodeBadge'
 import Confetti from '../components/shared/Confetti'
 import { StampInkFilter } from '../components/shared/RubberStamp'
-import LuxoLamp from '../components/shared/LuxoLamp'
 import MarkerScribble from '../components/shared/MarkerScribble'
 import CorkboardBackground from '../components/shared/CorkboardBackground'
 
@@ -188,21 +187,10 @@ export default function HostView() {
         <div className="pointer-events-auto">
           <RoomCodeBadge code={code ?? ''} size="md" />
         </div>
-        <div
-          className="text-center pointer-events-auto px-4 py-1.5"
-          style={{
-            background: '#f4e8d0',
-            border: '1px solid rgba(27, 40, 69, 0.2)',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-            transform: 'rotate(-0.6deg)',
-          }}
-        >
-          <div className="font-poster text-lg" style={{ color: '#1b2845' }}>
-            {room.meta.title}
-          </div>
-          <div className="font-hand text-sm" style={{ color: 'rgba(27, 40, 69, 0.7)' }}>
-            {roundLabel} · round {phase?.round ?? 1}/{totalRoundCount} ·{' '}
-            <span style={{ color: '#c8412b' }}>{phaseLabel}</span>
+        <div className="text-center pointer-events-auto flex flex-col items-center gap-0.5">
+          <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 22, objectFit: 'contain', opacity: 0.75 }} />
+          <div className="font-body text-xs font-bold" style={{ color: 'rgba(27,40,69,0.5)' }}>
+            {roundLabel} · {phaseLabel}
           </div>
         </div>
         <div className="flex items-center gap-3 pointer-events-auto">
@@ -210,7 +198,7 @@ export default function HostView() {
             <div
               className="p-1"
               style={{
-                background: 'rgba(244, 232, 208, 0.9)',
+                background: '#ffffff',
                 border: '1px solid rgba(27, 40, 69, 0.3)',
                 borderRadius: '50%',
                 boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
@@ -231,7 +219,7 @@ export default function HostView() {
             }}
             className="text-2xl px-2 py-1"
             style={{
-              background: 'rgba(244, 232, 208, 0.9)',
+              background: '#ffffff',
               border: '1px solid rgba(27, 40, 69, 0.3)',
               boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
               transform: 'rotate(2deg)',
@@ -417,7 +405,7 @@ function labelForRound(round: number, totalRounds: number): string {
 function Centered({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="min-h-screen flex items-center justify-center font-hand text-2xl"
+      className="min-h-screen flex items-center justify-center font-body text-2xl"
       style={{ color: '#1b2845' }}
     >
       {children}
@@ -441,7 +429,7 @@ function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) 
       </div>
       {subtitle && (
         <p
-          className="font-hand text-xl mt-2"
+          className="font-body text-xl mt-2"
           style={{ color: 'rgba(27, 40, 69, 0.75)' }}
         >
           {subtitle}
@@ -466,15 +454,10 @@ function LobbyView({
       className="text-center py-8"
     >
       <div className="flex justify-center items-center gap-6 mb-8">
-        <motion.div
-          animate={{ y: [0, -6, 0], rotate: [-1, 2, -1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <LuxoLamp size={140} />
-        </motion.div>
+        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 36, objectFit: 'contain', opacity: 0.7 }} />
         <div className="text-left">
           <div
-            className="font-hand text-xl"
+            className="font-body text-xl"
             style={{ color: 'rgba(27, 40, 69, 0.75)' }}
           >
             you're hosting!
@@ -489,7 +472,7 @@ function LobbyView({
       </div>
 
       <p
-        className="font-hand text-xl mb-4"
+        className="font-body text-xl mb-4"
         style={{ color: 'rgba(27, 40, 69, 0.8)' }}
       >
         share this code so friends can hop in:
@@ -537,19 +520,15 @@ function DoneView({
     >
       <Confetti count={160} colors={winnerColors} spread={1.3} />
 
-      <motion.div
-        animate={{ y: [0, -10, 0], rotate: [-2, 2, -2] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-        className="mb-6"
-      >
-        <LuxoLamp size={160} />
-      </motion.div>
+      <div className="mb-6">
+        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 48, objectFit: 'contain', opacity: 0.8 }} />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="font-hand text-2xl mb-3"
+        className="font-body text-2xl mb-3"
         style={{ color: 'rgba(27, 40, 69, 0.85)' }}
       >
         and the goat is…

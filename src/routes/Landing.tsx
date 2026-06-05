@@ -8,10 +8,6 @@ import { createRoom } from '../firebase/room'
 import { getRoomService, isLocalMode } from '../firebase'
 import { getTheme, DEFAULT_THEME_ID, THEMES } from '../data/themes'
 import AvatarPicker from '../components/ui/AvatarPicker'
-import Pushpin from '../components/shared/Pushpin'
-import Tape from '../components/shared/Tape'
-import MarkerScribble from '../components/shared/MarkerScribble'
-import CorkboardBackground from '../components/shared/CorkboardBackground'
 
 type Mode = 'menu' | 'create' | 'join'
 
@@ -35,10 +31,7 @@ export default function Landing() {
 
   const handleCreate = async () => {
     if (!uid) return
-    if (!name.trim()) {
-      setError('Pop your name in first')
-      return
-    }
+    if (!name.trim()) { setError('Enter your name first'); return }
     setBusy(true)
     setError(null)
     try {
@@ -54,7 +47,7 @@ export default function Landing() {
       navigate(`/host/${code}`)
     } catch (err) {
       console.error(err)
-      setError('Could not create room. Check console.')
+      setError('Could not create room.')
       setBusy(false)
     }
   }
@@ -62,23 +55,13 @@ export default function Landing() {
   const handleJoin = async () => {
     if (!uid) return
     const code = normalizeRoomCode(joinCode)
-    if (!isValidRoomCode(code)) {
-      setError("That code doesn't look quite right")
-      return
-    }
-    if (!name.trim()) {
-      setError('Pop your name in first')
-      return
-    }
+    if (!isValidRoomCode(code)) { setError("That code doesn't look right"); return }
+    if (!name.trim()) { setError('Enter your name first'); return }
     setBusy(true)
     setError(null)
     try {
       const exists = await getRoomService().roomExists(code)
-      if (!exists) {
-        setError(`We can't find room ${code}`)
-        setBusy(false)
-        return
-      }
+      if (!exists) { setError(`Room ${code} not found`); setBusy(false); return }
       setIdentity(name.trim(), emoji)
       navigate(`/play/${code}`)
     } catch (err) {
@@ -89,219 +72,161 @@ export default function Landing() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-start px-4 py-10 sm:py-16">
-      <CorkboardBackground />
-      {/* Hero: pinned title poster */}
-      <motion.div
-        initial={{ opacity: 0, y: -20, rotate: -4 }}
-        animate={{ opacity: 1, y: 0, rotate: -2.2 }}
-        transition={{ type: 'spring', stiffness: 180, damping: 16 }}
-        className="relative mb-12"
-        style={{ maxWidth: 640, width: '100%' }}
-      >
-        {/* tape strips */}
-        <Tape width={120} height={26} rotate={-12} color="amber" style={{ top: -14, left: 30 }} />
-        <Tape width={100} height={24} rotate={14} color="amber" style={{ top: -12, right: 30 }} />
+    <div className="relative min-h-screen flex flex-col items-center justify-start px-4 py-10 sm:py-16" style={{ background: '#ffffff' }}>
 
-        {/* pinned poster */}
-        <div
-          className="relative px-8 py-10 sm:px-12 sm:py-14"
+      {/* Disney·Pixar logo lockup */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mb-10"
+      >
+        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 40, objectFit: 'contain' }} />
+      </motion.div>
+
+      {/* Hero title */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 180, damping: 18, delay: 0.1 }}
+        className="text-center mb-3"
+      >
+        <h1
+          className="font-poster"
           style={{
-            background: '#f4e8d0',
-            backgroundImage: 'radial-gradient(ellipse at 30% 20%, #fff4d6 0%, #f4e8d0 60%, #e6d4a8 100%)',
-            border: '2px solid #1b2845',
-            borderRadius: '4px',
-            boxShadow: '0 12px 32px -6px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)',
             color: '#1b2845',
+            fontSize: 'clamp(3.5rem, 12vw, 7rem)',
+            lineHeight: 0.9,
+            letterSpacing: '-0.01em',
           }}
         >
-          <div
-            className="font-hand text-center mb-1"
-            style={{ color: 'rgba(27,40,69,0.65)', fontSize: '1.5rem', transform: 'rotate(-1deg)' }}
-          >
-            a pixar
-          </div>
-          <h1
-            className="font-poster text-center"
-            style={{
-              color: '#1b2845',
-              fontSize: 'clamp(3rem, 10vw, 5.5rem)',
-              lineHeight: 0.95,
-              letterSpacing: '-0.005em',
-            }}
-          >
-            GOAT
-            <br />
-            BRACKET
-          </h1>
-          <div className="flex justify-center mt-3">
-            <MarkerScribble variant="underline" size={220} color="#c8412b" animate={false} />
-          </div>
-          <div
-            className="font-hand text-center mt-4"
-            style={{ color: 'rgba(27,40,69,0.7)', fontSize: '1.25rem', transform: 'rotate(-1deg)' }}
-          >
-            crown the greatest pixar franchise of all time
-          </div>
-        </div>
-
-        {/* pushpins */}
-        <div className="absolute z-10" style={{ top: -10, left: '20%' }}>
-          <Pushpin color="red" size={22} />
-        </div>
-        <div className="absolute z-10" style={{ top: -10, right: '20%' }}>
-          <Pushpin color="navy" size={22} />
-        </div>
+          GOAT<br />BRACKET
+        </h1>
+        <p
+          className="font-body mt-4 text-base font-semibold"
+          style={{ color: 'rgba(27,40,69,0.5)', letterSpacing: '0.02em' }}
+        >
+          Crown the greatest Pixar franchise of all time
+        </p>
       </motion.div>
+
+      {/* Divider */}
+      <div className="w-16 h-0.5 mb-10 mt-2" style={{ background: '#c8412b', borderRadius: 2 }} />
 
       {/* Practice mode notice */}
       {isLocalMode() && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.55 }}
-          className="font-hand mb-6 px-3 py-1"
-          style={{
-            color: '#c8412b',
-            background: '#f4e8d0',
-            transform: 'rotate(-1deg)',
-            border: '1.5px dashed #c8412b',
-            fontSize: '1.1rem',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.25)',
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="font-body text-sm font-semibold mb-6 px-4 py-2"
+          style={{ color: '#c8412b', background: 'rgba(200,65,43,0.08)', border: '1px solid rgba(200,65,43,0.25)', borderRadius: '6px' }}
         >
-          practice mode — add Firebase for multi-device play
+          Practice mode — add Firebase for multi-device play
         </motion.div>
       )}
 
-      {/* Form card — index card style */}
+      {/* Form card */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, rotate: 2 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0.5 }}
-        transition={{ delay: 0.45, duration: 0.4 }}
-        className="relative w-full max-w-3xl px-8 py-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="w-full max-w-3xl px-8 py-8"
         style={{
-          background: '#f4e8d0',
-          backgroundImage: 'radial-gradient(ellipse at 30% 20%, #fff4d6 0%, #f4e8d0 60%, #e6d4a8 100%)',
-          border: '1.5px solid #1b2845',
-          boxShadow: '0 12px 32px -6px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)',
-          color: '#1b2845',
+          background: '#ffffff',
+          border: '1.5px solid rgba(27,40,69,0.12)',
+          borderRadius: '16px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
         }}
       >
-        <Tape width={90} height={22} rotate={-18} color="amber" style={{ top: -10, left: -20 }} />
-        <Tape width={80} height={20} rotate={20} color="amber" style={{ top: -8, right: -16 }} />
-
-        {/* ruled paper lines */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              'linear-gradient(180deg, transparent 0, transparent 31px, rgba(27,40,69,0.08) 32px, transparent 33px)',
-            backgroundSize: '100% 32px',
-            opacity: 0.7,
-          }}
-        />
-
         {mode === 'menu' && (
-          <div className="flex flex-col gap-4 relative">
+          <div className="flex flex-col gap-3">
             <button
               onClick={() => setMode('create')}
               disabled={!ready}
-              className="font-poster text-2xl py-5 transition-all hover:scale-[1.03] hover:-rotate-1 active:scale-[0.97]"
+              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: '#1b2845',
-                color: '#f4e8d0',
-                border: '2px solid #1b2845',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
                 letterSpacing: '0.02em',
-                boxShadow: '0 6px 14px -3px rgba(0,0,0,0.45)',
+                boxShadow: '0 4px 14px rgba(27,40,69,0.3)',
               }}
             >
-              start a new bracket
+              Start a new bracket
             </button>
             <button
               onClick={() => setMode('join')}
               disabled={!ready}
-              className="font-poster text-2xl py-5 transition-all hover:scale-[1.03] hover:rotate-1 active:scale-[0.97]"
+              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: 'transparent',
                 color: '#1b2845',
-                border: '2px solid #1b2845',
+                border: '1.5px solid rgba(27,40,69,0.2)',
+                borderRadius: '10px',
                 letterSpacing: '0.02em',
-                boxShadow: '0 6px 14px -3px rgba(0,0,0,0.3)',
               }}
             >
-              join with a code
+              Join with a code
             </button>
           </div>
         )}
 
         {(mode === 'create' || mode === 'join') && (
-          <div className="flex flex-col gap-5 relative">
+          <div className="flex flex-col gap-6">
             <button
-              onClick={() => {
-                setMode('menu')
-                setError(null)
-              }}
-              className="font-hand text-lg self-start"
-              style={{ color: 'rgba(27,40,69,0.7)' }}
+              onClick={() => { setMode('menu'); setError(null) }}
+              className="font-body text-sm font-bold self-start flex items-center gap-1"
+              style={{ color: 'rgba(27,40,69,0.5)' }}
             >
               ← back
             </button>
 
             <div>
-              <label
-                className="block font-hand text-lg mb-1"
-                style={{ color: 'rgba(27,40,69,0.7)' }}
-              >
-                your name
+              <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                Your name
               </label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Victor"
                 maxLength={20}
-                className="w-full px-4 py-3 text-2xl font-hand outline-none"
+                className="w-full px-4 py-3 text-xl font-body font-bold outline-none"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '2px solid #1b2845',
+                  background: '#f8f8f8',
+                  border: '1.5px solid rgba(27,40,69,0.12)',
+                  borderRadius: '8px',
                   color: '#1b2845',
                 }}
               />
             </div>
 
             <div>
-              <label
-                className="block font-hand text-lg mb-1"
-                style={{ color: 'rgba(27,40,69,0.7)' }}
-              >
-                pixar your avatar
+              <label className="block font-body text-sm font-bold mb-3 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                Pixar your avatar
               </label>
               <AvatarPicker value={emoji} onChange={setEmoji} />
             </div>
 
             {mode === 'create' && (
               <div>
-                <label
-                  className="block font-hand text-lg mb-1"
-                  style={{ color: 'rgba(27,40,69,0.7)' }}
-                >
-                  bracket
+                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                  Bracket
                 </label>
                 <select
                   value={themeId}
                   onChange={(e) => setThemeId(e.target.value)}
-                  className="w-full px-4 py-3 font-poster text-lg outline-none"
+                  className="w-full px-4 py-3 font-body font-bold text-base outline-none"
                   style={{
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '2px solid #1b2845',
+                    background: '#f8f8f8',
+                    border: '1.5px solid rgba(27,40,69,0.12)',
+                    borderRadius: '8px',
                     color: '#1b2845',
                   }}
                 >
                   {Object.values(THEMES).map((t) => (
-                    <option key={t.id} value={t.id} style={{ background: '#f4e8d0' }}>
+                    <option key={t.id} value={t.id}>
                       {t.title} · {t.size} entries
                     </option>
                   ))}
@@ -311,11 +236,8 @@ export default function Landing() {
 
             {mode === 'join' && (
               <div>
-                <label
-                  className="block font-hand text-lg mb-1"
-                  style={{ color: 'rgba(27,40,69,0.7)' }}
-                >
-                  room code
+                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                  Room code
                 </label>
                 <input
                   value={joinCode}
@@ -324,9 +246,9 @@ export default function Landing() {
                   maxLength={6}
                   className="w-full px-4 py-3 text-4xl font-poster tracking-[0.3em] text-center outline-none"
                   style={{
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '2px solid #1b2845',
+                    background: '#f8f8f8',
+                    border: '1.5px solid rgba(27,40,69,0.12)',
+                    borderRadius: '8px',
                     color: '#1b2845',
                   }}
                 />
@@ -334,14 +256,7 @@ export default function Landing() {
             )}
 
             {error && (
-              <div
-                className="font-hand text-base px-3 py-2"
-                style={{
-                  color: '#c8412b',
-                  border: '1.5px dashed #c8412b',
-                  background: 'rgba(200, 65, 43, 0.08)',
-                }}
-              >
+              <div className="font-body text-sm font-semibold px-4 py-3" style={{ color: '#c8412b', background: 'rgba(200,65,43,0.08)', border: '1px solid rgba(200,65,43,0.2)', borderRadius: '8px' }}>
                 {error}
               </div>
             )}
@@ -349,16 +264,17 @@ export default function Landing() {
             <button
               onClick={mode === 'create' ? handleCreate : handleJoin}
               disabled={busy || !ready}
-              className="font-poster text-2xl py-4 transition-all hover:scale-[1.03] hover:-rotate-1 active:scale-[0.97] disabled:opacity-50"
+              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
               style={{
                 background: '#1b2845',
-                color: '#f4e8d0',
-                border: '2px solid #1b2845',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
                 letterSpacing: '0.02em',
-                boxShadow: '0 6px 14px -3px rgba(0,0,0,0.45)',
+                boxShadow: '0 4px 14px rgba(27,40,69,0.3)',
               }}
             >
-              {busy ? '…' : mode === 'create' ? 'create & host' : 'join the game'}
+              {busy ? '…' : mode === 'create' ? 'Create & host' : 'Join the game'}
             </button>
           </div>
         )}

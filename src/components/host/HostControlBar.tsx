@@ -39,16 +39,10 @@ export default function HostControlBar({
     style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
     >
       <div
-        className="font-hand text-lg px-3 py-1 pointer-events-auto"
-        style={{
-          color: '#1b2845',
-          background: 'rgba(244, 232, 208, 0.92)',
-          border: '1px solid rgba(27, 40, 69, 0.35)',
-          transform: 'rotate(-1.5deg)',
-          boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
-        }}
+        className="font-body text-xs font-black uppercase pointer-events-auto"
+        style={{ color: 'rgba(27,40,69,0.35)', letterSpacing: '0.1em' }}
       >
-        host controls
+        Host controls
       </div>
 
       <div className="flex gap-3 pointer-events-auto">
@@ -84,8 +78,8 @@ export default function HostControlBar({
 
         {phase === 'done' && (
           <span
-            className="font-hand text-lg px-4 py-2"
-            style={{ color: 'var(--cream)' }}
+            className="font-body text-sm font-bold px-4 py-2"
+            style={{ color: 'rgba(27,40,69,0.45)' }}
           >
             game over · round {round}/{totalRounds}
           </span>
@@ -99,7 +93,6 @@ function PaperTag({
   children,
   onClick,
   disabled,
-  primary,
   stamp,
 }: {
   children: React.ReactNode
@@ -112,35 +105,19 @@ function PaperTag({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="relative px-6 py-2.5 transition-all hover:scale-[1.04] hover:-rotate-1 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+      className="px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto"
       style={{
-        background: primary ? '#f4e8d0' : 'rgba(244,232,208,0.85)',
-        border: `2px solid ${primary ? '#1b2845' : 'rgba(27,40,69,0.6)'}`,
-        color: stamp ? '#c8412b' : '#1b2845',
-        fontFamily: stamp
-          ? "'Big Shoulders Stencil Display', Impact, sans-serif"
-          : "'Alfa Slab One', serif",
-        fontSize: stamp ? '1.25rem' : '1rem',
-        letterSpacing: stamp ? '0.08em' : '0.01em',
-        fontWeight: stamp ? 900 : 400,
-        boxShadow: '0 6px 14px -3px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.25)',
-        transform: 'rotate(-1deg)',
+        background: stamp ? '#c8412b' : '#1b2845',
+        color: '#ffffff',
+        border: 'none',
+        borderRadius: '8px',
+        fontSize: stamp ? '1.1rem' : '1rem',
+        letterSpacing: stamp ? '0.06em' : '0.02em',
+        boxShadow: stamp
+          ? '0 4px 14px rgba(200,65,43,0.4)'
+          : '0 4px 14px rgba(27,40,69,0.3)',
       }}
     >
-      {/* string at top — small hole */}
-      <span
-        aria-hidden
-        className="absolute"
-        style={{
-          top: -3,
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 6,
-          height: 6,
-          borderRadius: '50%',
-          background: 'rgba(0,0,0,0.4)',
-        }}
-      />
       {children}
     </button>
   )

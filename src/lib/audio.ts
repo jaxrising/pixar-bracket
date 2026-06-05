@@ -32,12 +32,48 @@ let muted = (() => {
   return localStorage.getItem('pixar-bracket:muted') === '1'
 })()
 
+// Background music
+let _music: HTMLAudioElement | null = null
+let _musicStarted = false
+
+function getMusic(): HTMLAudioElement | null {
+  if (typeof Audio === 'undefined') return null
+  if (!_music) {
+    _music = new Audio('/audio/pixar-bracket-theme.mp3')
+    _music.loop = true
+    _music.volume = 0.35
+  }
+  return _music
+}
+
+export function playMusic() {
+  const m = getMusic()
+  if (!m || muted || _musicStarted) return
+  _musicStarted = true
+  m.currentTime = 0
+  void m.play().catch(() => {})
+}
+
+export function stopMusic() {
+  if (!_music) return
+  _music.pause()
+  _music.currentTime = 0
+  _musicStarted = false
+}
+
 export function setMuted(value: boolean) {
   muted = value
   try {
     localStorage.setItem('pixar-bracket:muted', value ? '1' : '0')
   } catch {
     // ignore
+  }
+  const m = getMusic()
+  if (!m) return
+  if (value) {
+    m.pause()
+  } else if (enabled && _musicStarted) {
+    void m.play().catch(() => {})
   }
 }
 
@@ -47,6 +83,7 @@ export function isMuted() {
 
 export function enableAudio() {
   enabled = true
+  playMusic()
 }
 
 export function isAudioEnabled() {

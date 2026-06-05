@@ -286,39 +286,26 @@ export default function PlayerView() {
           style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
         >
           <div
-            className="font-hand text-base px-3 py-1 pointer-events-auto"
-            style={{
-              color: '#1b2845',
-              background: 'rgba(244, 232, 208, 0.92)',
-              border: '1px solid rgba(27, 40, 69, 0.35)',
-              transform: 'rotate(-1deg)',
-              boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
-            }}
+            className="font-body text-sm font-bold pointer-events-auto"
+            style={{ color: submitted ? '#c8412b' : 'rgba(27,40,69,0.45)' }}
           >
             {submitted ? '✓ picks locked' : `${myPicksCount} of ${currentRoundMatchups.length} picked`}
           </div>
           <button
             onClick={() => { void handleSubmit() }}
             disabled={submitted || myPicksCount === 0}
-            className="relative px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.04] hover:-rotate-1 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto"
             style={{
-              background: allPicked && !submitted ? '#c8412b' : '#f4e8d0',
-              color: allPicked && !submitted ? '#f4e8d0' : '#1b2845',
-              border: '2px solid #1b2845',
-              letterSpacing: '0.01em',
-              boxShadow: '0 6px 14px -3px rgba(0,0,0,0.45)',
-              transform: 'rotate(-1deg)',
-              pointerEvents: 'auto',
+              background: allPicked && !submitted ? '#c8412b' : '#1b2845',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              letterSpacing: '0.02em',
+              boxShadow: allPicked && !submitted
+                ? '0 4px 14px rgba(200,65,43,0.4)'
+                : '0 4px 14px rgba(27,40,69,0.25)',
             }}
           >
-            <span
-              aria-hidden
-              className="absolute"
-              style={{
-                top: -3, left: '50%', transform: 'translate(-50%, -50%)',
-                width: 6, height: 6, borderRadius: '50%', background: 'rgba(0,0,0,0.4)',
-              }}
-            />
             {submitted ? '✓ submitted' : allPicked ? 'Lock in picks →' : 'Submit picks →'}
           </button>
         </div>
@@ -340,7 +327,7 @@ function labelForRound(round: number, totalRounds: number): string {
 function Centered({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="min-h-screen flex items-center justify-center font-hand text-2xl"
+      className="min-h-screen flex items-center justify-center font-body text-2xl"
       style={{ color: '#1b2845' }}
     >
       {children}
@@ -350,7 +337,7 @@ function Centered({ children }: { children: React.ReactNode }) {
 
 function Header({
   code,
-  title,
+  title: _title,
   roundLabel,
   round,
   totalRounds,
@@ -375,23 +362,13 @@ function Header({
     <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
       style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
     >
-      <div className="flex items-start gap-3 min-w-0 pointer-events-auto">
+      <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
         <RoomCodeBadge code={code} size="sm" />
-        <div
-          className="hidden sm:block min-w-0 px-3 py-1"
-          style={{
-            background: '#f4e8d0',
-            border: '1px solid rgba(27, 40, 69, 0.2)',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-            transform: 'rotate(-0.6deg)',
-          }}
-        >
-          <div className="font-poster text-base truncate" style={{ color: '#1b2845' }}>
-            {title}
-          </div>
-          <div className="font-hand text-sm" style={{ color: 'rgba(27, 40, 69, 0.7)' }}>
-            {roundLabel} · round {round}/{totalRounds}
-          </div>
+      </div>
+      <div className="flex flex-col items-center gap-0.5 pointer-events-auto">
+        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7 }} />
+        <div className="font-body text-xs font-bold hidden sm:block" style={{ color: 'rgba(27,40,69,0.45)' }}>
+          {roundLabel} · round {round}/{totalRounds}
         </div>
       </div>
       <div className="flex items-center gap-3 pointer-events-auto">
@@ -399,7 +376,7 @@ function Header({
           <div
             className="p-1"
             style={{
-              background: '#f4e8d0',
+              background: '#ffffff',
               border: '1px solid rgba(27, 40, 69, 0.2)',
               borderRadius: '50%',
               boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
@@ -410,12 +387,11 @@ function Header({
         )}
         <button
           onClick={onMuteToggle}
-          className="text-2xl px-2 py-1"
+          className="text-xl px-2.5 py-1.5"
           style={{
-            background: '#f4e8d0',
-            border: '1px solid rgba(27, 40, 69, 0.2)',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-            transform: 'rotate(2deg)',
+            background: '#f8f8f8',
+            border: '1px solid rgba(27,40,69,0.1)',
+            borderRadius: '8px',
           }}
           aria-label={muted ? 'Unmute' : 'Mute'}
         >
@@ -438,7 +414,7 @@ function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) 
         </div>
       </div>
       {subtitle && (
-        <p className="font-hand text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
+        <p className="font-body text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
           {subtitle}
         </p>
       )}
@@ -452,14 +428,14 @@ function PicksProgress({ count, total }: { count: number; total: number }) {
     <div
       className="px-4 py-2"
       style={{
-        background: '#f4e8d0',
+        background: '#ffffff',
         border: '1.5px solid #1b2845',
         borderRadius: 4,
         boxShadow: '0 4px 8px rgba(0,0,0,0.25)',
         transform: 'rotate(1deg)',
       }}
     >
-      <div className="font-hand text-base" style={{ color: '#1b2845' }}>
+      <div className="font-body text-base" style={{ color: '#1b2845' }}>
         {count} <span style={{ color: 'rgba(27,40,69,0.6)' }}>of {total} picked</span>
       </div>
       <div className="w-28 h-1.5 mt-1 overflow-hidden" style={{ background: 'rgba(27,40,69,0.15)' }}>
@@ -490,20 +466,20 @@ function LobbyView({
       <h2 className="font-poster text-4xl mb-2" style={{ color: '#1b2845' }}>
         {room.meta.title}
       </h2>
-      <p className="font-hand text-xl mb-8" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
+      <p className="font-body text-xl mb-8" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
         waiting for the host to start…
       </p>
       <div
         className="inline-block px-5 py-4 mb-4"
         style={{
-          background: 'rgba(244, 232, 208, 0.92)',
+          background: '#ffffff',
           border: '1.5px solid rgba(27,40,69,0.4)',
           borderRadius: 4,
           boxShadow: '0 8px 18px -4px rgba(0,0,0,0.4)',
           transform: 'rotate(-0.5deg)',
         }}
       >
-        <div className="font-hand text-base mb-3" style={{ color: '#1b2845' }}>
+        <div className="font-body text-base mb-3" style={{ color: '#1b2845' }}>
           {players.length} in the room
         </div>
         <div className="flex flex-wrap gap-2 justify-center">
@@ -514,7 +490,7 @@ function LobbyView({
               style={{
                 background: p.isHost ? '#ffd96b' : '#fff4d6',
                 border: '1px solid rgba(27,40,69,0.4)',
-                fontFamily: "'Caveat', cursive",
+                fontFamily: 'var(--font-body)',
                 fontWeight: 700,
                 fontSize: '1rem',
                 color: '#1b2845',
@@ -530,7 +506,7 @@ function LobbyView({
         </div>
       </div>
       {amHost && (
-        <p className="font-hand text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.75)' }}>
+        <p className="font-body text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.75)' }}>
           you're the host — switch to the host view to start the game
         </p>
       )}
@@ -596,7 +572,7 @@ function DoneView({
         >
           <div
             style={{
-              background: '#f4e8d0',
+              background: '#ffffff',
               border: '1.5px solid rgba(27,40,69,0.3)',
               borderRadius: 4,
               padding: '6px 8px',
@@ -608,7 +584,7 @@ function DoneView({
             }}
           >
             <PlayerAvatar value={s.player.emoji} size={40} />
-            <span style={{ fontFamily: "'Caveat', cursive", fontSize: '0.75rem', color: '#1b2845', fontWeight: 700 }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#1b2845', fontWeight: 700 }}>
               {s.player.name}
             </span>
           </div>
@@ -623,7 +599,7 @@ function DoneView({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="font-hand text-xl mb-3"
+        className="font-body text-xl mb-3"
         style={{ color: 'rgba(27, 40, 69, 0.85)' }}
       >
         and the goat is…
