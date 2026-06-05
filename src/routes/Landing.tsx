@@ -81,7 +81,7 @@ export default function Landing() {
         transition={{ duration: 0.4 }}
         className="mb-10"
       >
-        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 40, objectFit: 'contain' }} />
+        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 40, objectFit: 'contain' }} />
       </motion.div>
 
       {/* Hero title */}

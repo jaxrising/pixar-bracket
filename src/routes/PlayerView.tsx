@@ -366,7 +366,7 @@ function Header({
         <RoomCodeBadge code={code} size="sm" />
       </div>
       <div className="flex flex-col items-center gap-0.5 pointer-events-auto">
-        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7 }} />
+        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7 }} />
         <div className="font-body text-xs font-bold hidden sm:block" style={{ color: 'rgba(27,40,69,0.45)' }}>
           {roundLabel} · round {round}/{totalRounds}
         </div>

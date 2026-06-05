@@ -188,7 +188,7 @@ export default function HostView() {
           <RoomCodeBadge code={code ?? ''} size="md" />
         </div>
         <div className="text-center pointer-events-auto flex flex-col items-center gap-0.5">
-          <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 22, objectFit: 'contain', opacity: 0.75 }} />
+          <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 22, objectFit: 'contain', opacity: 0.75 }} />
           <div className="font-body text-xs font-bold" style={{ color: 'rgba(27,40,69,0.5)' }}>
             {roundLabel} · {phaseLabel}
           </div>
@@ -454,7 +454,7 @@ function LobbyView({
       className="text-center py-8"
     >
       <div className="flex justify-center items-center gap-6 mb-8">
-        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 36, objectFit: 'contain', opacity: 0.7 }} />
+        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 36, objectFit: 'contain', opacity: 0.7 }} />
         <div className="text-left">
           <div
             className="font-body text-xl"
@@ -521,7 +521,7 @@ function DoneView({
       <Confetti count={160} colors={winnerColors} spread={1.3} />
 
       <div className="mb-6">
-        <img src="/logo/disney-pixar-seeklogo.png" alt="Disney · Pixar" style={{ height: 48, objectFit: 'contain', opacity: 0.8 }} />
+        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 48, objectFit: 'contain', opacity: 0.8 }} />
       </div>
 
       <motion.div

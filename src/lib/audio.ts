@@ -11,18 +11,20 @@ export type SfxKey =
   | 'crown'
   | 'join'
 
+const BASE = import.meta.env.BASE_URL
+
 const SFX_URLS: Record<SfxKey, string> = {
-  voteTap: '/audio/vote-tap.mp3',
-  voteSwap: '/audio/vote-swap.mp3',
-  timerTick: '/audio/timer-tick.mp3',
-  timerPulse: '/audio/timer-pulse.mp3',
-  revealBatch: '/audio/reveal-batch.mp3',
-  revealPair: '/audio/reveal-pair.mp3',
-  revealDramatic: '/audio/reveal-dramatic.mp3',
-  revealCinematic: '/audio/reveal-cinematic.mp3',
-  coinFlip: '/audio/coin-flip.mp3',
-  crown: '/audio/crown.mp3',
-  join: '/audio/join.mp3',
+  voteTap: `${BASE}audio/vote-tap.mp3`,
+  voteSwap: `${BASE}audio/vote-swap.mp3`,
+  timerTick: `${BASE}audio/timer-tick.mp3`,
+  timerPulse: `${BASE}audio/timer-pulse.mp3`,
+  revealBatch: `${BASE}audio/reveal-batch.mp3`,
+  revealPair: `${BASE}audio/reveal-pair.mp3`,
+  revealDramatic: `${BASE}audio/reveal-dramatic.mp3`,
+  revealCinematic: `${BASE}audio/reveal-cinematic.mp3`,
+  coinFlip: `${BASE}audio/coin-flip.mp3`,
+  crown: `${BASE}audio/crown.mp3`,
+  join: `${BASE}audio/join.mp3`,
 }
 
 const cache = new Map<SfxKey, HTMLAudioElement>()
@@ -39,7 +41,7 @@ let _musicStarted = false
 function getMusic(): HTMLAudioElement | null {
   if (typeof Audio === 'undefined') return null
   if (!_music) {
-    _music = new Audio('/audio/pixar-bracket-theme.mp3')
+    _music = new Audio(`${BASE}audio/pixar-bracket-theme.mp3`)
     _music.loop = true
     _music.volume = 0.35
   }
