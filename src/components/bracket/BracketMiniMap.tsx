@@ -166,7 +166,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                     y={stubH / 2 + 4}
                     textAnchor={displaySeed.poster ? 'start' : 'middle'}
                     fontSize={isFinal ? 12 : 10}
-                    fontFamily="'Nunito', sans-serif"
+                    fontFamily="'Lato', sans-serif"
                     fill="#c8412b"
                   >
                     {displaySeed.shortName}
@@ -181,7 +181,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                       preserveAspectRatio="xMidYMid slice" />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 - 2}
-                    textAnchor="start" fontSize={9} fontFamily="'Nunito', sans-serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#1b2845">
                     {seedA?.shortName ?? '?'}
                   </text>
                   {/* Divider */}
@@ -192,7 +192,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                       preserveAspectRatio="xMidYMid slice" opacity={0.4} />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 + 12}
-                    textAnchor="start" fontSize={9} fontFamily="'Nunito', sans-serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#1b2845">
                     {seedB?.shortName ?? '?'}
                   </text>
                 </>
@@ -201,7 +201,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
               {/* "now!" tag for active round */}
               {isActive && (
                 <text x={stubW - 2} y={-4} textAnchor="end" fontSize={10}
-                  fontFamily="'Nunito', sans-serif" fontWeight={700} fill="#c8412b"
+                  fontFamily="'Lato', sans-serif" fontWeight={700} fill="#c8412b"
                   transform="rotate(-8, ${stubW}, 0)">
                   now!
                 </text>
