@@ -180,7 +180,7 @@ export default function HostView() {
     phase?.current === 'round_complete'
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#cda673' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#ffffff' }}>
       <StampInkFilter />
       <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none">
         <div className="pointer-events-auto">

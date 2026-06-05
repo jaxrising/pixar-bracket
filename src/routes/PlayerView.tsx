@@ -139,7 +139,7 @@ export default function PlayerView() {
     phase?.current === 'round_complete'
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#cda673' }}>
+    <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#ffffff' }}>
       <StampInkFilter />
       <Header
         code={code ?? ''}
