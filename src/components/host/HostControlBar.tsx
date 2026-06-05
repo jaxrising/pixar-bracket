@@ -35,7 +35,7 @@ export default function HostControlBar({
 }: Props) {
   return (
     <div
-      className="sticky bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none"
     >
       <div
         className="font-hand text-lg px-3 py-1 pointer-events-auto"

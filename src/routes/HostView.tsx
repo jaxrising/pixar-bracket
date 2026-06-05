@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../hooks/useAuth'
@@ -44,7 +44,6 @@ export default function HostView() {
 
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState<'matchups' | 'bracket'>('matchups')
-  const revealingRef = useRef(false)
 
   useEffect(() => {
     if (!ready) return
@@ -114,42 +113,8 @@ export default function HostView() {
     setLoading(true)
     try {
       await beginReveal(code)
-      const style = room?.config.revealStyle[String(phase?.round ?? 1)] ?? 'dramatic'
-      if (style === 'rapid' || style === 'pairs') {
-        void runAutoReveal(style)
-      }
     } finally {
       setLoading(false)
-    }
-  }
-
-  const runAutoReveal = async (style: 'rapid' | 'pairs') => {
-    if (!room || !code || !phase) return
-    if (revealingRef.current) return
-    revealingRef.current = true
-    try {
-      const batchSize = style === 'rapid' ? 4 : 2
-      const gapMs = style === 'rapid' ? 700 : 1400
-
-      const matchups = currentRoundMatchups
-      let cursor = phase.revealCursor ?? 0
-      while (cursor < matchups.length) {
-        const batch = matchups.slice(cursor, cursor + batchSize)
-        for (const m of batch) {
-          const fresh = useRoomStore.getState().room
-          if (!fresh) break
-          await revealMatchup(code, phase.round, m.id, m.matchup, fresh.votes, cursor)
-          cursor++
-        }
-        playSfx('revealBatch', 0.7)
-        await new Promise((r) => setTimeout(r, gapMs))
-      }
-      const r = useRoomStore.getState().room
-      if (r) {
-        await completeRound(code, phase.round, size, r.bracket.rounds[String(phase.round)]?.matchups ?? {})
-      }
-    } finally {
-      revealingRef.current = false
     }
   }
 
@@ -341,6 +306,7 @@ export default function HostView() {
                     currentRound={phase.round}
                     myVotes={myVotes}
                     onPick={() => {}}
+                    players={room.players}
                     showVoteBars
                     revealed
                     revealCursor={revealCursor}
@@ -401,10 +367,8 @@ export default function HostView() {
             label="the whole bracket"
             subtitle="every matchup, pinned to the board"
           />
-          <div className="mt-6 mb-8 overflow-x-auto max-w-full">
-            <div style={{ transform: 'scale(1.5)', transformOrigin: 'center top', padding: '40px' }}>
-              <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
-            </div>
+          <div className="mt-6 mb-8 w-full px-4">
+            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
           <div className="mt-6">
             <BracketViewCard

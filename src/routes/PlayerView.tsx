@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../hooks/useAuth'
@@ -18,7 +18,6 @@ import TimerRing from '../components/player/TimerRing'
 import RoomCodeBadge from '../components/shared/RoomCodeBadge'
 import Confetti from '../components/shared/Confetti'
 import { StampInkFilter } from '../components/shared/RubberStamp'
-import LuxoLamp from '../components/shared/LuxoLamp'
 import MarkerScribble from '../components/shared/MarkerScribble'
 import CorkboardBackground from '../components/shared/CorkboardBackground'
 
@@ -33,6 +32,10 @@ export default function PlayerView() {
     usePlayerStore()
 
   const [view, setView] = useState<'matchups' | 'bracket'>('matchups')
+  // Pending votes: local only until user hits Submit
+  const [pendingVotes, setPendingVotes] = useState<Record<string, string>>({})
+  const [submitted, setSubmitted] = useState(false)
+  const submitLockRef = useRef(false)
 
   usePresence(code ?? null, uid)
 
@@ -47,7 +50,35 @@ export default function PlayerView() {
     void joinRoom(code, uid, myName.trim(), myEmoji)
   }, [room, uid, code, amHost, myName, myEmoji, navigate])
 
+  // Reset pending votes when a new round starts
+  const currentRound = room?.phase.round
+  useEffect(() => {
+    setPendingVotes({})
+    setSubmitted(false)
+    submitLockRef.current = false
+  }, [currentRound])
+
+  // Auto-submit when phase leaves voting (timer expired or host advanced)
+  const flushPendingVotes = useCallback(async () => {
+    if (submitLockRef.current) return
+    if (!uid || !code) return
+    submitLockRef.current = true
+    const entries = Object.entries(pendingVotes)
+    if (entries.length === 0) return
+    if (!audioEnabled) { enableAudio(); setAudioEnabled(true) }
+    await Promise.all(entries.map(([mid, seedId]) => submitVote(code, mid, uid, seedId)))
+    setSubmitted(true)
+  }, [pendingVotes, uid, code, audioEnabled, setAudioEnabled])
+
   const phase = room?.phase
+  const prevPhaseRef = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (prevPhaseRef.current === 'voting' && phase?.current !== 'voting') {
+      void flushPendingVotes()
+    }
+    prevPhaseRef.current = phase?.current
+  }, [phase?.current, flushPendingVotes])
+
   const size = (room?.bracket && Object.keys(room.bracket.seeds).length === 32 ? 32 : 16) as 16 | 32
 
   const currentRoundMatchups = useMemo(() => {
@@ -70,20 +101,37 @@ export default function PlayerView() {
   if (!room) return <Centered>loading room {code}…</Centered>
 
   const handlePick = (matchupId: string, seedId: string) => {
-    if (!uid || !code) return
     if (phase?.current !== 'voting') return
-    if (Date.now() > (phase.endsAt ?? Infinity)) return
-
-    if (!audioEnabled) {
-      enableAudio()
-      setAudioEnabled(true)
-    }
-    void submitVote(code, matchupId, uid, seedId)
+    if (submitted) return
+    if (!audioEnabled) { enableAudio(); setAudioEnabled(true) }
+    // Toggle off if same selection
+    setPendingVotes((prev) => {
+      if (prev[matchupId] === seedId) {
+        const next = { ...prev }
+        delete next[matchupId]
+        return next
+      }
+      return { ...prev, [matchupId]: seedId }
+    })
     playSfx('voteTap', 0.5)
     vibrate(15)
   }
 
-  const myPicksCount = currentRoundMatchups.filter((m) => myVotes[m.id]).length
+  const handleSubmit = async () => {
+    if (submitted || submitLockRef.current) return
+    submitLockRef.current = true
+    if (!uid || !code) return
+    if (!audioEnabled) { enableAudio(); setAudioEnabled(true) }
+    await Promise.all(
+      Object.entries(pendingVotes).map(([mid, seedId]) => submitVote(code, mid, uid, seedId))
+    )
+    setSubmitted(true)
+    playSfx('revealDramatic', 0.6)
+    vibrate(30)
+  }
+
+  const myPicksCount = currentRoundMatchups.filter((m) => pendingVotes[m.id]).length
+  const allPicked = myPicksCount === currentRoundMatchups.length
   const roundLabel = labelForRound(phase?.round ?? 1, totalRoundCount)
   const canToggleView =
     phase?.current === 'voting' ||
@@ -137,7 +185,10 @@ export default function PlayerView() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <RoundHeader label={roundLabel} subtitle="tap a side to vote. change your mind anytime." />
+                  <RoundHeader
+                    label={roundLabel}
+                    subtitle={submitted ? 'picks locked in — waiting for results…' : 'tap a movie to vote. tap again to deselect.'}
+                  />
                   <div className="mb-5 flex justify-end">
                     <PicksProgress count={myPicksCount} total={currentRoundMatchups.length} />
                   </div>
@@ -146,8 +197,8 @@ export default function PlayerView() {
                     bracket={room.bracket}
                     votes={room.votes}
                     currentRound={phase.round}
-                    myVotes={myVotes}
-                    onPick={handlePick}
+                    myVotes={pendingVotes}
+                    onPick={submitted ? () => {} : handlePick}
                   />
                 </motion.div>
               )}
@@ -178,6 +229,7 @@ export default function PlayerView() {
                     currentRound={phase.round}
                     myVotes={myVotes}
                     onPick={() => {}}
+                    players={room.players}
                     showVoteBars
                     revealed
                     revealCursor={phase.revealCursor}
@@ -213,10 +265,8 @@ export default function PlayerView() {
             label="the whole bracket"
             subtitle="every matchup, pinned to the board"
           />
-          <div className="mt-6 mb-8 overflow-x-auto max-w-full">
-            <div style={{ padding: '20px' }}>
-              <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
-            </div>
+          <div className="mt-6 mb-8 w-full px-4">
+            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
           <div className="mt-6">
             <BracketViewCard
@@ -229,6 +279,48 @@ export default function PlayerView() {
           </div>
         </main>
       </motion.div>
+
+      {/* Sticky submit bar — only during voting and not yet submitted */}
+      {phase?.current === 'voting' && (
+        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none">
+          <div
+            className="font-hand text-base px-3 py-1 pointer-events-auto"
+            style={{
+              color: '#1b2845',
+              background: 'rgba(244, 232, 208, 0.92)',
+              border: '1px solid rgba(27, 40, 69, 0.35)',
+              transform: 'rotate(-1deg)',
+              boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
+            }}
+          >
+            {submitted ? '✓ picks locked' : `${myPicksCount} of ${currentRoundMatchups.length} picked`}
+          </div>
+          <button
+            onClick={() => { void handleSubmit() }}
+            disabled={submitted || myPicksCount === 0}
+            className="relative px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.04] hover:-rotate-1 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{
+              background: allPicked && !submitted ? '#c8412b' : '#f4e8d0',
+              color: allPicked && !submitted ? '#f4e8d0' : '#1b2845',
+              border: '2px solid #1b2845',
+              letterSpacing: '0.01em',
+              boxShadow: '0 6px 14px -3px rgba(0,0,0,0.45)',
+              transform: 'rotate(-1deg)',
+              pointerEvents: 'auto',
+            }}
+          >
+            <span
+              aria-hidden
+              className="absolute"
+              style={{
+                top: -3, left: '50%', transform: 'translate(-50%, -50%)',
+                width: 6, height: 6, borderRadius: '50%', background: 'rgba(0,0,0,0.4)',
+              }}
+            />
+            {submitted ? '✓ submitted' : allPicked ? 'Lock in picks →' : 'Submit picks →'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -391,13 +483,6 @@ function LobbyView({
       exit={{ opacity: 0 }}
       className="flex-1 px-4 py-10 max-w-2xl mx-auto w-full text-center"
     >
-      <motion.div
-        animate={{ y: [0, -8, 0], rotate: [-1, 1.5, -1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        className="inline-block mb-4"
-      >
-        <LuxoLamp size={120} />
-      </motion.div>
       <h2 className="font-poster text-4xl mb-2" style={{ color: '#1b2845' }}>
         {room.meta.title}
       </h2>
@@ -460,28 +545,75 @@ function DoneView({
     room.bracket.rounds[String(totalRoundCount)]?.matchups ?? {},
   )[0]
   const winnerSeed = finalMatchup?.winner
-    ? Object.values(room.bracket.seeds).find((s) => s.id === finalMatchup.winner)
+    ? Object.values(room.bracket.seeds ?? {}).find((s) => s.id === finalMatchup.winner)
     : null
   const winnerColors = winnerSeed
     ? [winnerSeed.gradient[0], winnerSeed.gradient[1], '#ffb627', '#f4e8d0', '#c8412b']
     : undefined
+
+  // Find all players who voted for the winner in the final
+  const winnerVoters = finalMatchup?.winner
+    ? Object.entries((room.votes ?? {})[Object.keys(room.bracket.rounds[String(totalRoundCount)]?.matchups ?? {})[0]] ?? {})
+        .filter(([, seedId]) => seedId === finalMatchup.winner)
+        .map(([uid]) => room.players?.[uid])
+        .filter(Boolean)
+    : []
+
+  // Scatter stickers at deterministic positions around the screen
+  const stickers = winnerVoters.map((p, i) => {
+    const angle = (i / Math.max(winnerVoters.length, 1)) * 360
+    const rad = (angle * Math.PI) / 180
+    const rx = 38 + (i % 3) * 8
+    const ry = 28 + (i % 2) * 10
+    const x = 50 + rx * Math.cos(rad)
+    const y = 50 + ry * Math.sin(rad)
+    const rot = ((i * 47) % 30) - 15
+    return { player: p!, x, y, rot, delay: 1.2 + i * 0.12 }
+  })
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="flex-1 flex flex-col items-center justify-center px-4 py-10 text-center"
+      className="flex-1 flex flex-col items-center justify-center px-4 py-10 text-center relative"
     >
       <Confetti count={120} colors={winnerColors} spread={1.2} />
 
-      <motion.div
-        animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        className="mb-5"
-      >
-        <LuxoLamp size={120} />
-      </motion.div>
+      {/* Voter stickers scattered on the corkboard */}
+      {stickers.map((s, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0.2, rotate: s.rot - 20 }}
+          animate={{ opacity: 1, scale: 1, rotate: s.rot }}
+          transition={{ delay: s.delay, type: 'spring', stiffness: 280, damping: 18 }}
+          className="fixed pointer-events-none"
+          style={{ left: `${s.x}vw`, top: `${s.y}vh`, transform: `translate(-50%,-50%) rotate(${s.rot}deg)`, zIndex: 5 }}
+        >
+          <div
+            style={{
+              background: '#f4e8d0',
+              border: '1.5px solid rgba(27,40,69,0.3)',
+              borderRadius: 4,
+              padding: '6px 8px',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.35)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 3,
+            }}
+          >
+            <PlayerAvatar value={s.player.emoji} size={40} />
+            <span style={{ fontFamily: "'Caveat', cursive", fontSize: '0.75rem', color: '#1b2845', fontWeight: 700 }}>
+              {s.player.name}
+            </span>
+          </div>
+          {/* pushpin */}
+          <div style={{ position: 'absolute', top: -6, left: '50%', transform: 'translateX(-50%)' }}>
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#c8412b', boxShadow: '0 2px 4px rgba(0,0,0,0.4)' }} />
+          </div>
+        </motion.div>
+      ))}
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}

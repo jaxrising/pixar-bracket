@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import type { BracketState, Votes } from '../../types/room'
+import type { BracketState, Player, Votes } from '../../types/room'
 import { getMatchupsForRound, getSeedById } from '../../lib/bracket'
 import { tallyMatchup } from '../../lib/tally'
 import MatchupTile from './MatchupTile'
@@ -11,6 +11,7 @@ interface Props {
   currentRound: number
   myVotes: Record<string, string>
   onPick: (matchupId: string, seedId: string) => void
+  players?: Record<string, Player>
   showVoteBars?: boolean
   revealed?: boolean
   revealCursor?: number
@@ -23,6 +24,7 @@ export default function BracketBoard({
   currentRound,
   myVotes,
   onPick,
+  players,
   showVoteBars = false,
   revealed = false,
   revealCursor = 0,
@@ -49,6 +51,7 @@ export default function BracketBoard({
           if (hideEmpty && (!aSeed || !bSeed)) return null
           const tally = tallyMatchup(m.id, m.matchup, votes)
           const matchupRevealed = revealed && i < revealCursor
+          const matchupVotes = (votes ?? {})[m.id] ?? {}
           return (
             <MatchupTile
               key={m.id}
@@ -63,6 +66,8 @@ export default function BracketBoard({
               onPickB={bSeed ? () => onPick(m.id, bSeed.id) : undefined}
               showVoteBars={showVoteBars || matchupRevealed}
               revealed={matchupRevealed}
+              matchupVotes={matchupVotes}
+              players={players}
             />
           )
         })}

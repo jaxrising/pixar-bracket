@@ -8,7 +8,6 @@ import { createRoom } from '../firebase/room'
 import { getRoomService, isLocalMode } from '../firebase'
 import { getTheme, DEFAULT_THEME_ID, THEMES } from '../data/themes'
 import AvatarPicker from '../components/ui/AvatarPicker'
-import LuxoLamp from '../components/shared/LuxoLamp'
 import Pushpin from '../components/shared/Pushpin'
 import Tape from '../components/shared/Tape'
 import MarkerScribble from '../components/shared/MarkerScribble'
@@ -150,6 +149,12 @@ export default function Landing() {
           <div className="flex justify-center mt-3">
             <MarkerScribble variant="underline" size={220} color="#c8412b" animate={false} />
           </div>
+          <div
+            className="font-hand text-center mt-4"
+            style={{ color: 'rgba(27,40,69,0.7)', fontSize: '1.25rem', transform: 'rotate(-1deg)' }}
+          >
+            crown the greatest pixar franchise of all time
+          </div>
         </div>
 
         {/* pushpins */}
@@ -158,39 +163,6 @@ export default function Landing() {
         </div>
         <div className="absolute z-10" style={{ top: -10, right: '20%' }}>
           <Pushpin color="navy" size={22} />
-        </div>
-      </motion.div>
-
-      {/* Luxo lamp + handwritten annotation */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="relative mb-8 flex items-center gap-4"
-      >
-        <motion.div
-          animate={{ y: [0, -6, 0], rotate: [-1.5, 1.5, -1.5] }}
-          transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <LuxoLamp size={110} />
-        </motion.div>
-        <div className="relative">
-          <div
-            className="font-hand"
-            style={{
-              color: '#1b2845',
-              fontSize: '1.6rem',
-              transform: 'rotate(-2deg)',
-              lineHeight: 1.1,
-            }}
-          >
-            crown the greatest
-            <br />
-            pixar franchise of all time
-          </div>
-          <div className="absolute" style={{ top: -8, left: -32 }}>
-            <MarkerScribble variant="arrow" size={64} color="#1b2845" animate={false} />
-          </div>
         </div>
       </motion.div>
 

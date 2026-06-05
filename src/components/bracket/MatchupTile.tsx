@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import SeedCard from './SeedCard'
-import type { BracketSeedEntry, MatchupState, MatchupTally } from '../../types/room'
+import PlayerAvatar from '../ui/PlayerAvatar'
+import type { BracketSeedEntry, MatchupState, MatchupTally, Player } from '../../types/room'
 
 type Size = 'sm' | 'md' | 'lg' | 'xl'
 
@@ -17,6 +18,8 @@ interface Props {
   showVoteBars?: boolean
   revealed?: boolean
   index?: number
+  matchupVotes?: Record<string, string>
+  players?: Record<string, Player>
 }
 
 export default function MatchupTile({
@@ -32,7 +35,18 @@ export default function MatchupTile({
   showVoteBars = false,
   revealed = false,
   index = 0,
+  matchupVotes = {},
+  players = {},
 }: Props) {
+  // Split voters by which side they voted for
+  const aVoters = Object.entries(matchupVotes)
+    .filter(([, seedId]) => seedId === aSeed?.id)
+    .map(([uid]) => players[uid])
+    .filter(Boolean) as Player[]
+  const bVoters = Object.entries(matchupVotes)
+    .filter(([, seedId]) => seedId === bSeed?.id)
+    .map(([uid]) => players[uid])
+    .filter(Boolean) as Player[]
   const aSelected = mySelectedSeedId === aSeed?.id
   const bSelected = mySelectedSeedId === bSeed?.id
 
@@ -68,14 +82,17 @@ export default function MatchupTile({
           disabled={disabled || revealed}
         />
         {/* marker "vs" between cards */}
-        <div className="flex items-center justify-center min-w-[48px]">
+        <div className="flex flex-col items-center justify-center min-w-[64px] gap-1">
           <span
-            className="font-hand"
+            className="font-poster"
             style={{
-              fontSize: size === 'xl' ? '4rem' : size === 'lg' ? '2.5rem' : size === 'md' ? '1.75rem' : '1.25rem',
+              fontSize: size === 'xl' ? '5rem' : size === 'lg' ? '3.5rem' : size === 'md' ? '2.5rem' : '1.75rem',
               color: '#1b2845',
               transform: 'rotate(-6deg)',
               display: 'inline-block',
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
+              textShadow: '0 2px 8px rgba(0,0,0,0.2)',
             }}
           >
             vs
@@ -105,6 +122,34 @@ export default function MatchupTile({
         >
           coin flip!
         </div>
+      )}
+
+      {/* Voter avatars shown when revealed */}
+      {revealed && (aVoters.length > 0 || bVoters.length > 0) && (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.3 }}
+          className="grid grid-cols-[1fr_auto_1fr] gap-3 mt-2 items-start"
+        >
+          {/* A-side voters */}
+          <div className="flex flex-wrap gap-1 justify-start">
+            {aVoters.map((p, i) => (
+              <div key={i} title={p.name} style={{ filter: aWinner ? 'none' : 'grayscale(1) opacity(0.5)' }}>
+                <PlayerAvatar value={p.emoji} size={28} />
+              </div>
+            ))}
+          </div>
+          <div style={{ minWidth: 64 }} />
+          {/* B-side voters */}
+          <div className="flex flex-wrap gap-1 justify-end">
+            {bVoters.map((p, i) => (
+              <div key={i} title={p.name} style={{ filter: bWinner ? 'none' : 'grayscale(1) opacity(0.5)' }}>
+                <PlayerAvatar value={p.emoji} size={28} />
+              </div>
+            ))}
+          </div>
+        </motion.div>
       )}
     </motion.div>
   )
