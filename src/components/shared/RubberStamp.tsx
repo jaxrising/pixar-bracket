@@ -14,7 +14,7 @@ interface Props {
 const COLORS: Record<NonNullable<Props['color']>, string> = {
   red: '#111111',
   navy: '#111111',
-  gold: '#b8860b',
+  gold: '#ffb627',
 }
 
 const SIZE: Record<NonNullable<Props['size']>, { font: string; padding: string; border: string }> = {

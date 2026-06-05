@@ -198,7 +198,7 @@ export default function SeedCard({
         {/* Winner stamp */}
         {winner && (
           <div className="absolute z-30 pointer-events-none" style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <RubberStamp text={stampText ?? 'ADVANCING'} rotate={-12} color="red" size={sizing.stamp} />
+            <RubberStamp text={stampText ?? 'ADVANCING'} rotate={-12} color="gold" size={sizing.stamp} />
           </div>
         )}
       </div>
