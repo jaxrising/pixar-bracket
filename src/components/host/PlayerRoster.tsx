@@ -18,7 +18,7 @@ function hashRotate(uid: string, range = 6): number {
 }
 
 export default function PlayerRoster({ players, presence, votedUids, totalToVote }: Props) {
-  const list = Object.entries(players).sort(([, a], [, b]) => a.joinedAt - b.joinedAt)
+  const list = Object.entries(players ?? {}).sort(([, a], [, b]) => a.joinedAt - b.joinedAt)
   const onlineCount = list.filter(([uid]) => presence[uid]?.online).length
   const votedCount = list.filter(([uid]) => votedUids.has(uid)).length
 

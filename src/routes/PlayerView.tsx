@@ -60,7 +60,7 @@ export default function PlayerView() {
   const myVotes = useMemo(() => {
     if (!uid || !room) return {}
     const out: Record<string, string> = {}
-    for (const [mid, voteMap] of Object.entries(room.votes)) {
+    for (const [mid, voteMap] of Object.entries(room.votes ?? {})) {
       if (voteMap[uid]) out[mid] = voteMap[uid]
     }
     return out
@@ -383,7 +383,7 @@ function LobbyView({
   room: NonNullable<ReturnType<typeof useRoomStore.getState>['room']>
   amHost: boolean
 }) {
-  const players = Object.entries(room.players).sort(([, a], [, b]) => a.joinedAt - b.joinedAt)
+  const players = Object.entries(room.players ?? {}).sort(([, a], [, b]) => a.joinedAt - b.joinedAt)
   return (
     <motion.div
       initial={{ opacity: 0 }}

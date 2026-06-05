@@ -139,7 +139,7 @@ export function getMatchupsForRound(
 ): Array<{ id: string; matchup: MatchupState }> {
   const r = bracket.rounds[String(round)]
   if (!r) return []
-  return Object.entries(r.matchups)
+  return Object.entries(r.matchups ?? {})
     .sort(([a], [b]) => {
       const ai = parseInt(a.split('-')[1] ?? '0', 10)
       const bi = parseInt(b.split('-')[1] ?? '0', 10)

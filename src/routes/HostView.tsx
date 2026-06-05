@@ -72,7 +72,7 @@ export default function HostView() {
   const myVotes = useMemo<Record<string, string>>(() => {
     if (!uid || !room) return {}
     const out: Record<string, string> = {}
-    for (const [mid, voteMap] of Object.entries(room.votes)) {
+    for (const [mid, voteMap] of Object.entries(room.votes ?? {})) {
       if (voteMap[uid]) out[mid] = voteMap[uid]
     }
     return out
@@ -82,7 +82,7 @@ export default function HostView() {
     if (!room) return new Set<string>()
     const counts: Record<string, number> = {}
     for (const m of currentRoundMatchups) {
-      const voteMap = room.votes[m.id] ?? {}
+      const voteMap = (room.votes ?? {})[m.id] ?? {}
       for (const u of Object.keys(voteMap)) {
         counts[u] = (counts[u] ?? 0) + 1
       }
