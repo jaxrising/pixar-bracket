@@ -36,6 +36,7 @@ export default function HostControlBar({
   return (
     <div
       className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none"
+    style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
     >
       <div
         className="font-hand text-lg px-3 py-1 pointer-events-auto"

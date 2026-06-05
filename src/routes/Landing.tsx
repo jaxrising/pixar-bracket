@@ -111,22 +111,10 @@ export default function Landing() {
             backgroundImage: 'radial-gradient(ellipse at 30% 20%, #fff4d6 0%, #f4e8d0 60%, #e6d4a8 100%)',
             border: '2px solid #1b2845',
             borderRadius: '4px',
-            boxShadow: '0 24px 48px -10px rgba(0,0,0,0.55), 0 8px 18px rgba(0,0,0,0.35)',
+            boxShadow: '0 12px 32px -6px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)',
             color: '#1b2845',
           }}
         >
-          {/* paper grain */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{ mixBlendMode: 'multiply', opacity: 0.16 }}
-          >
-            <filter id="hero-paper-noise">
-              <feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="2" seed="5" />
-              <feColorMatrix values="0 0 0 0 0.6  0 0 0 0 0.45  0 0 0 0 0.25  0 0 0 0.5 0" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#hero-paper-noise)" />
-          </svg>
-
           <div
             className="font-hand text-center mb-1"
             style={{ color: 'rgba(27,40,69,0.65)', fontSize: '1.5rem', transform: 'rotate(-1deg)' }}
@@ -196,7 +184,7 @@ export default function Landing() {
           background: '#f4e8d0',
           backgroundImage: 'radial-gradient(ellipse at 30% 20%, #fff4d6 0%, #f4e8d0 60%, #e6d4a8 100%)',
           border: '1.5px solid #1b2845',
-          boxShadow: '0 24px 48px -10px rgba(0,0,0,0.55), 0 8px 18px rgba(0,0,0,0.35)',
+          boxShadow: '0 12px 32px -6px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1)',
           color: '#1b2845',
         }}
       >

@@ -282,7 +282,9 @@ export default function PlayerView() {
 
       {/* Sticky submit bar — only during voting and not yet submitted */}
       {phase?.current === 'voting' && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none">
+        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none"
+          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
+        >
           <div
             className="font-hand text-base px-3 py-1 pointer-events-auto"
             style={{
@@ -370,15 +372,17 @@ function Header({
   showTimer: boolean
 }) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
+      style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+    >
       <div className="flex items-start gap-3 min-w-0 pointer-events-auto">
         <RoomCodeBadge code={code} size="sm" />
         <div
           className="hidden sm:block min-w-0 px-3 py-1"
           style={{
-            background: 'rgba(244, 232, 208, 0.92)',
-            border: '1px solid rgba(27, 40, 69, 0.35)',
-            boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
+            background: '#f4e8d0',
+            border: '1px solid rgba(27, 40, 69, 0.2)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
             transform: 'rotate(-0.6deg)',
           }}
         >
@@ -395,10 +399,10 @@ function Header({
           <div
             className="p-1"
             style={{
-              background: 'rgba(244, 232, 208, 0.9)',
-              border: '1px solid rgba(27, 40, 69, 0.3)',
+              background: '#f4e8d0',
+              border: '1px solid rgba(27, 40, 69, 0.2)',
               borderRadius: '50%',
-              boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
             }}
           >
             <TimerRing endsAt={endsAt} size={48} totalSeconds={roundTimerSeconds} />
@@ -408,9 +412,9 @@ function Header({
           onClick={onMuteToggle}
           className="text-2xl px-2 py-1"
           style={{
-            background: 'rgba(244, 232, 208, 0.9)',
-            border: '1px solid rgba(27, 40, 69, 0.3)',
-            boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
+            background: '#f4e8d0',
+            border: '1px solid rgba(27, 40, 69, 0.2)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
             transform: 'rotate(2deg)',
           }}
           aria-label={muted ? 'Unmute' : 'Mute'}

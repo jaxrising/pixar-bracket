@@ -182,16 +182,18 @@ export default function HostView() {
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#ffffff' }}>
       <StampInkFilter />
-      <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+      >
         <div className="pointer-events-auto">
           <RoomCodeBadge code={code ?? ''} size="md" />
         </div>
         <div
           className="text-center pointer-events-auto px-4 py-1.5"
           style={{
-            background: 'rgba(244, 232, 208, 0.92)',
-            border: '1px solid rgba(27, 40, 69, 0.35)',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+            background: '#f4e8d0',
+            border: '1px solid rgba(27, 40, 69, 0.2)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
             transform: 'rotate(-0.6deg)',
           }}
         >

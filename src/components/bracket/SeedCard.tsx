@@ -146,7 +146,7 @@ export default function SeedCard({
         border: '1.5px solid rgba(27, 40, 69, 0.2)',
         borderRadius: '4px',
         boxShadow:
-          '0 14px 28px -6px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.3)',
+          '0 8px 20px -4px rgba(0,0,0,0.18), 0 3px 8px rgba(0,0,0,0.1)',
         color: '#1b2845',
         transformOrigin: 'center top',
         padding: '4px',
