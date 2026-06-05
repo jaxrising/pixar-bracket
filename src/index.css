@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Caveat:wght@500;600;700&family=Big+Shoulders+Stencil+Display:wght@800;900&family=Nunito:wght@600;700;800&display=swap');
+
+:root {
+  color-scheme: dark;
+
+  /* Production-wall palette — 4 colors, used with intent */
+  --cork: #b88f5e;
+  --cork-deep: #8a6234;
+  --cork-shadow: #6a4a26;
+  --cream: #f4e8d0;
+  --cream-bright: #fff4d6;
+  --ink: #1b2845;
+  --ink-soft: #2a3760;
+  --stamp: #c8412b;
+  --stamp-deep: #8b2818;
+
+  /* Luxo's light — used only as lamp glow, never as UI fill */
+  --lamp: #ffb627;
+  --lamp-warm: #ffd166;
+  --lamp-glow: rgba(255, 182, 39, 0.45);
+
+  /* Functional aliases */
+  --bg: var(--cork);
+  --text: var(--ink);
+  --muted: rgba(27, 40, 69, 0.65);
+  --text-on-cork: var(--cream);
+  --muted-on-cork: rgba(244, 232, 208, 0.75);
+
+  --border-ink: rgba(27, 40, 69, 0.85);
+
+  /* Paper shadows mimic real paper lifting off the board */
+  --paper-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0, 0, 0, 0.3);
+  --paper-shadow-sm: 0 6px 14px -3px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --paper-shadow-lg: 0 24px 48px -10px rgba(0, 0, 0, 0.55), 0 8px 18px rgba(0, 0, 0, 0.35);
+
+  --radius-paper: 4px;
+  --radius-card: 8px;
+  --radius-tag: 12px;
+
+  --transition: 180ms cubic-bezier(0.2, 0.7, 0.25, 1);
+  --transition-slow: 320ms cubic-bezier(0.2, 0.7, 0.25, 1);
+
+  --font-poster: 'Lilita One', Georgia, serif;
+  --font-hand: 'Caveat', cursive;
+  --font-stamp: 'Big Shoulders Stencil Display', 'Impact', sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body {
+  background: var(--cork);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* keep #root as default — no stacking context so fixed z-index:-1 children can sit behind everything */
+
+button {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 700;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  color: inherit;
+  font-weight: 600;
+}
+
+.font-poster {
+  font-family: var(--font-poster);
+  letter-spacing: 0.005em;
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+  font-weight: 700;
+}
+
+.font-stamp {
+  font-family: var(--font-stamp);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.paper-shadow {
+  box-shadow: var(--paper-shadow);
+}
+
+.paper-shadow-sm {
+  box-shadow: var(--paper-shadow-sm);
+}
+
+.paper-shadow-lg {
+  box-shadow: var(--paper-shadow-lg);
+}
+
+.ink-divider {
+  border-color: var(--border-ink);
+}
+
+@keyframes paper-flutter {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+}
+
+@keyframes luxo-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes luxo-hop {
+  0% { transform: translateY(0) scaleY(1); }
+  25% { transform: translateY(0) scaleY(0.85) scaleX(1.1); }
+  55% { transform: translateY(-28px) scaleY(1.1) scaleX(0.95); }
+  85% { transform: translateY(0) scaleY(0.92) scaleX(1.05); }
+  100% { transform: translateY(0) scaleY(1); }
+}
+
+@keyframes stamp-slam {
+  0% { transform: translateY(-200px) rotate(var(--stamp-rot, -8deg)) scale(2); opacity: 0; }
+  35% { transform: translateY(0) rotate(var(--stamp-rot, -8deg)) scale(1.1); opacity: 1; }
+  55% { transform: translateY(-4px) rotate(var(--stamp-rot, -8deg)) scale(1.05); }
+  100% { transform: translateY(0) rotate(var(--stamp-rot, -8deg)) scale(1); opacity: 1; }
+}
+
+@keyframes scribble-draw {
+  from { stroke-dashoffset: 100%; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
