@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import type { BracketSeedEntry } from '../../types/room'
 import RubberStamp from '../shared/RubberStamp'
 import MarkerScribble from '../shared/MarkerScribble'
@@ -46,14 +46,6 @@ export default function SeedCard({
 
   const sizing = SIZE_MAP[size]
 
-  // Subtle tilt — keep just a hint for character
-  const tilt = useMemo(() => {
-    if (!seed) return 0
-    let h = 0
-    for (let i = 0; i < seed.id.length; i++) h = (h * 31 + seed.id.charCodeAt(i)) | 0
-    return ((Math.abs(h) % 1000) / 1000) * 1.5 - 0.75
-  }, [seed?.id])
-
   if (!seed) {
     return (
       <div
@@ -77,10 +69,10 @@ export default function SeedCard({
       onClick={onClick}
       disabled={disabled}
       animate={{
-        y: loser ? 70 : 0,
-        rotate: loser ? tilt + 22 : tilt + (selected ? -0.5 : 0),
-        scale: selected ? 1.04 : winner ? 1.06 : loser ? 0.86 : 1,
-        opacity: dimmed ? 0.35 : loser ? 0.38 : 1,
+        y: loser ? 40 : 0,
+        rotate: 0,
+        scale: selected ? 1.04 : winner ? 1.06 : loser ? 0.88 : 1,
+        opacity: dimmed ? 0.35 : loser ? 0.4 : 1,
       }}
       whileTap={!disabled ? { scale: 0.98 } : undefined}
       transition={
@@ -97,43 +89,42 @@ export default function SeedCard({
         color: '#111111',
         transformOrigin: 'center top',
         padding: 0,
-        overflow: 'visible',
+        overflow: 'hidden',  // clip blur inside card bounds
       }}
     >
-      {/* Selected indicator — clean top bar instead of sticky note */}
+      {/* Selected indicator — top bar */}
       {selected && !winner && !loser && (
         <div
           className="absolute top-0 left-0 right-0 z-40 pointer-events-none flex items-center justify-center py-1"
           style={{ background: '#111111' }}
         >
-          <span className="font-body text-xs font-black text-white uppercase tracking-widest" style={{ letterSpacing: '0.12em' }}>
+          <span className="font-body text-xs font-black text-white uppercase" style={{ letterSpacing: '0.12em' }}>
             my pick
           </span>
         </div>
       )}
 
-      {/* Blurred backdrop drop-shadow effect */}
+      {/* Blurred backdrop — clipped inside card via overflow:hidden on parent */}
       {seed.poster && posterLoaded && !posterFailed && (
         <div
           aria-hidden
-          className="absolute inset-0 pointer-events-none"
+          className="absolute pointer-events-none"
           style={{
+            inset: '-12px',
             backgroundImage: `url(${seed.poster})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center top',
-            filter: 'blur(18px) brightness(0.65) saturate(1.4)',
-            transform: 'scale(1.1)',
-            zIndex: -1,
-            borderRadius: 0,
+            filter: 'blur(8px) brightness(0.6) saturate(1.3)',
+            zIndex: 0,
           }}
         />
       )}
 
-      {/* Poster fills the card */}
+      {/* Poster */}
       <div
         className="relative w-full h-full overflow-hidden"
         style={{
-          borderRadius: 0,
+          zIndex: 1,
           background: seed.poster
             ? '#111111'
             : `linear-gradient(135deg, ${seed.gradient[0]} 0%, ${seed.gradient[1]} 100%)`,
@@ -164,7 +155,7 @@ export default function SeedCard({
           </div>
         )}
 
-        {/* Title overlay — shown when no poster */}
+        {/* Title overlay — only when no poster */}
         {!hasPoster && (
           <div
             className="absolute left-0 right-0 bottom-0 px-3 pt-8 pb-2"
@@ -193,7 +184,7 @@ export default function SeedCard({
           </div>
         )}
 
-        {/* Loser — X scribble */}
+        {/* Loser X */}
         {loser && (
           <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
             <MarkerScribble

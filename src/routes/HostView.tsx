@@ -18,6 +18,7 @@ import {
 } from '../firebase/room'
 import { enableAudio, playSfx, setMuted } from '../lib/audio'
 import BracketBoard from '../components/bracket/BracketBoard'
+import BracketMiniMap from '../components/bracket/BracketMiniMap'
 import SeedCard from '../components/bracket/SeedCard'
 import TimerRing from '../components/player/TimerRing'
 import HostControlBar from '../components/host/HostControlBar'
@@ -338,22 +339,12 @@ export default function HostView() {
 
         {/* BRACKET OVERVIEW REGION — mirrors matchup board */}
         <main
-          className="px-4 pt-16 pb-24 flex flex-col"
+          className="px-4 pt-16 pb-24 flex flex-col items-center"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <div className="max-w-7xl w-full mx-auto">
-            <RoundHeader label="the whole bracket" />
-            <BracketBoard
-              bracket={room.bracket}
-              votes={room.votes}
-              currentRound={phase?.round ?? 1}
-              myVotes={myVotes}
-              onPick={() => {}}
-              players={room.players}
-              showVoteBars={phase?.current === 'revealing' || phase?.current === 'round_complete'}
-              revealed={phase?.current === 'revealing' || phase?.current === 'round_complete'}
-              revealCursor={revealCursor}
-            />
+          <RoundHeader label="the whole bracket" />
+          <div className="mt-6 w-full px-2">
+            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
         </main>
       </motion.div>

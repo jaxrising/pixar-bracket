@@ -141,18 +141,19 @@ export default function Landing() {
         }}
       >
         {mode === 'menu' && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col items-center gap-3">
             <button
               onClick={() => { enableAudio(); setMode('create') }}
               disabled={!ready}
-              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="font-body font-black text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: '#111111',
                 color: '#ffffff',
                 border: 'none',
-                borderRadius: '10px',
-                letterSpacing: '0.02em',
-                boxShadow: '0 4px 14px rgba(17,17,17,0.3)',
+                borderRadius: '12px',
+                padding: '14px 48px',
+                letterSpacing: '0.01em',
+                boxShadow: '0 4px 14px rgba(17,17,17,0.25)',
               }}
             >
               Start a new bracket
@@ -160,13 +161,14 @@ export default function Landing() {
             <button
               onClick={() => { enableAudio(); setMode('join') }}
               disabled={!ready}
-              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="font-body font-black text-base transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: 'transparent',
                 color: '#111111',
                 border: '1.5px solid rgba(17,17,17,0.2)',
-                borderRadius: '10px',
-                letterSpacing: '0.02em',
+                borderRadius: '12px',
+                padding: '14px 48px',
+                letterSpacing: '0.01em',
               }}
             >
               Join with a code
@@ -265,14 +267,15 @@ export default function Landing() {
             <button
               onClick={mode === 'create' ? handleCreate : handleJoin}
               disabled={busy || !ready}
-              className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              className="font-body font-black text-base transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
               style={{
                 background: '#111111',
                 color: '#ffffff',
                 border: 'none',
-                borderRadius: '10px',
-                letterSpacing: '0.02em',
-                boxShadow: '0 4px 14px rgba(17,17,17,0.3)',
+                borderRadius: '12px',
+                padding: '14px 48px',
+                letterSpacing: '0.01em',
+                boxShadow: '0 4px 14px rgba(17,17,17,0.25)',
               }}
             >
               {busy ? '…' : mode === 'create' ? 'Create & host' : 'Join the game'}

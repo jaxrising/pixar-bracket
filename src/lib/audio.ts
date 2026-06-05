@@ -53,7 +53,16 @@ export function playMusic() {
   if (!m || muted || _musicStarted) return
   _musicStarted = true
   m.currentTime = 0
-  void m.play().catch(() => {})
+  void m.play().catch(() => {
+    // Retry once after a short delay (handles autoplay policy timing)
+    _musicStarted = false
+    setTimeout(() => {
+      if (!muted && enabled) {
+        _musicStarted = true
+        void m.play().catch(() => { _musicStarted = false })
+      }
+    }, 500)
+  })
 }
 
 export function stopMusic() {

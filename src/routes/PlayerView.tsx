@@ -11,6 +11,7 @@ import { submitVote, joinRoom } from '../firebase/room'
 import { playSfx, vibrate, enableAudio, setMuted } from '../lib/audio'
 import PlayerAvatar from '../components/ui/PlayerAvatar'
 import BracketBoard from '../components/bracket/BracketBoard'
+import BracketMiniMap from '../components/bracket/BracketMiniMap'
 import BracketViewCard from '../components/bracket/BracketViewCard'
 import SeedCard from '../components/bracket/SeedCard'
 import TimerRing from '../components/player/TimerRing'
@@ -243,24 +244,14 @@ export default function PlayerView() {
           </div>
         </main>
 
-        {/* BRACKET OVERVIEW REGION — mirrors host view */}
+        {/* BRACKET OVERVIEW REGION */}
         <main
-          className="px-4 pt-16 pb-24 flex flex-col"
+          className="px-4 pt-16 pb-24 flex flex-col items-center"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <div className="max-w-7xl w-full mx-auto">
-            <RoundHeader label="the whole bracket" />
-            <BracketBoard
-              bracket={room.bracket}
-              votes={room.votes}
-              currentRound={phase?.round ?? 1}
-              myVotes={myVotes}
-              onPick={() => {}}
-              players={room.players}
-              showVoteBars={phase?.current === 'revealing' || phase?.current === 'round_complete'}
-              revealed={phase?.current === 'revealing' || phase?.current === 'round_complete'}
-              revealCursor={phase?.revealCursor ?? currentRoundMatchups.length}
-            />
+          <RoundHeader label="the whole bracket" />
+          <div className="mt-6 w-full px-2">
+            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
         </main>
       </motion.div>

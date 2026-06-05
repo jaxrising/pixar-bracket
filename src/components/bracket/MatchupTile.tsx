@@ -88,11 +88,9 @@ export default function MatchupTile({
             style={{
               fontSize: size === 'xl' ? '5rem' : size === 'lg' ? '3.5rem' : size === 'md' ? '2.5rem' : '1.75rem',
               color: '#111111',
-              transform: 'rotate(-6deg)',
               display: 'inline-block',
               lineHeight: 1,
               letterSpacing: '-0.02em',
-              textShadow: '0 2px 8px rgba(0,0,0,0.2)',
             }}
           >
             vs
