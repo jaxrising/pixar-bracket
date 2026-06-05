@@ -144,7 +144,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
               {/* card background */}
               <rect
                 width={stubW} height={stubH} rx={3}
-                fill="#f4e8d0"
+                fill="#ffffff"
                 stroke={isActive ? '#c8412b' : '#1b2845'}
                 strokeWidth={isActive ? 2 : 1}
                 filter={isActive ? 'drop-shadow(0 3px 6px rgba(200,65,43,0.4))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))'}
@@ -166,7 +166,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                     y={stubH / 2 + 4}
                     textAnchor={displaySeed.poster ? 'start' : 'middle'}
                     fontSize={isFinal ? 12 : 10}
-                    fontFamily="'Alfa Slab One', serif"
+                    fontFamily="'Nunito', sans-serif"
                     fill="#c8412b"
                   >
                     {displaySeed.shortName}
@@ -181,7 +181,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                       preserveAspectRatio="xMidYMid slice" />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 - 2}
-                    textAnchor="start" fontSize={9} fontFamily="'Alfa Slab One', serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Nunito', sans-serif" fill="#1b2845">
                     {seedA?.shortName ?? '?'}
                   </text>
                   {/* Divider */}
@@ -192,7 +192,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                       preserveAspectRatio="xMidYMid slice" opacity={0.4} />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 + 12}
-                    textAnchor="start" fontSize={9} fontFamily="'Alfa Slab One', serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Nunito', sans-serif" fill="#1b2845">
                     {seedB?.shortName ?? '?'}
                   </text>
                 </>
