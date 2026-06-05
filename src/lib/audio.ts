@@ -100,6 +100,7 @@ function load(key: SfxKey): HTMLAudioElement | null {
     const audio = new Audio(SFX_URLS[key])
     audio.preload = 'auto'
     audio.volume = 0.6
+    audio.onerror = () => {} // silence 404s for missing SFX
     cache.set(key, audio)
     return audio
   } catch {

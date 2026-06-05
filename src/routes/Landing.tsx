@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { enableAudio } from '../lib/audio'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../hooks/useAuth'
@@ -142,7 +143,7 @@ export default function Landing() {
         {mode === 'menu' && (
           <div className="flex flex-col gap-3">
             <button
-              onClick={() => setMode('create')}
+              onClick={() => { enableAudio(); setMode('create') }}
               disabled={!ready}
               className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
@@ -157,7 +158,7 @@ export default function Landing() {
               Start a new bracket
             </button>
             <button
-              onClick={() => setMode('join')}
+              onClick={() => { enableAudio(); setMode('join') }}
               disabled={!ready}
               className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
