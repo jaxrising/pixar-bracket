@@ -150,5 +150,5 @@ export function getMatchupsForRound(
 
 export function getSeedById(bracket: BracketState, seedId: string | null) {
   if (!seedId) return null
-  return Object.values(bracket.seeds).find((s) => s.id === seedId) ?? null
+  return Object.values(bracket.seeds ?? {}).find((s) => s.id === seedId) ?? null
 }

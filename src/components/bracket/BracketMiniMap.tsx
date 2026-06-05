@@ -13,7 +13,7 @@ interface Props {
  * The active round is highlighted; future rounds show "?" placeholders.
  */
 export default function BracketMiniMap({ bracket, currentRound }: Props) {
-  const size = (Object.keys(bracket.seeds).length === 32 ? 32 : 16) as 16 | 32
+  const size = (Object.keys(bracket.seeds ?? {}).length === 32 ? 32 : 16) as 16 | 32
   if (size !== 16) {
     // 32-team tree is a bigger render — not implemented yet
     return null

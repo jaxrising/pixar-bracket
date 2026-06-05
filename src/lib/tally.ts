@@ -5,7 +5,7 @@ export function tallyMatchup(
   matchup: MatchupState,
   votes: Votes,
 ): MatchupTally {
-  const voteMap = votes[matchupId] ?? {}
+  const voteMap = (votes ?? {})[matchupId] ?? {}
   let aVotes = 0
   let bVotes = 0
   for (const seedId of Object.values(voteMap)) {
@@ -64,7 +64,7 @@ export function determineWinner(
 
 export function countVotesByPlayer(votes: Votes, uid: string): number {
   let n = 0
-  for (const voteMap of Object.values(votes)) {
+  for (const voteMap of Object.values(votes ?? {})) {
     if (voteMap[uid]) n++
   }
   return n
