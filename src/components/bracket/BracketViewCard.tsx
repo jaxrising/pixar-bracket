@@ -13,7 +13,7 @@ export default function BracketViewCard({ onClick, variant = 'open' }: Props) {
       whileHover={{ scale: 1.03, y: -1 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className="font-body font-bold text-sm px-5 py-3 pointer-events-auto"
+      className="font-body font-bold text-sm px-8 py-3 pointer-events-auto whitespace-nowrap"
       style={{
         background: '#111111',
         color: '#ffffff',

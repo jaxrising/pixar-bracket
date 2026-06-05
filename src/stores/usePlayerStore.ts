@@ -19,8 +19,11 @@ function loadIdentity() {
 }
 
 function loadMuted(): boolean {
-  if (typeof localStorage === 'undefined') return false
-  return localStorage.getItem('pixar-bracket:muted') === '1'
+  if (typeof localStorage === 'undefined') return true
+  const stored = localStorage.getItem('pixar-bracket:muted')
+  // Default to muted if no preference set — host unmutes intentionally
+  if (stored === null) return true
+  return stored === '1'
 }
 
 const initial = loadIdentity()

@@ -48,7 +48,7 @@ export default function HostControlBar({
       {canToggleView ? (
         <button
           onClick={onToggleView}
-          className="font-body font-bold text-sm px-5 py-3 transition-all hover:scale-[1.03] active:scale-[0.97]"
+          className="font-body font-bold text-sm px-8 py-3 transition-all hover:scale-[1.03] active:scale-[0.97] whitespace-nowrap"
           style={{
             background: '#111111',
             color: '#ffffff',
@@ -115,7 +115,7 @@ function PaperTag({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="px-6 py-3 font-body font-bold text-sm transition-all hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+      className="px-8 py-3 font-body font-bold text-sm transition-all hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
       style={{
         background: '#111111',
         color: '#ffffff',

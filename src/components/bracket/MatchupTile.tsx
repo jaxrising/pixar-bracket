@@ -69,7 +69,7 @@ export default function MatchupTile({
       }}
       className="relative"
     >
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-1 items-center">
+      <div className="flex items-center justify-center gap-2">
         <SeedCard
           seed={aSeed}
           size={size}
@@ -128,19 +128,19 @@ export default function MatchupTile({
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.3 }}
-          className="grid grid-cols-[1fr_auto_1fr] gap-3 mt-2 items-start"
+          className="flex items-start justify-center gap-3 mt-2"
         >
           {/* A-side voters */}
-          <div className="flex flex-wrap gap-1 justify-start">
+          <div className="flex flex-wrap gap-1 justify-end" style={{ width: 150 }}>
             {aVoters.map((p, i) => (
               <div key={i} title={p.name} style={{ filter: aWinner ? 'none' : 'grayscale(1) opacity(0.5)' }}>
                 <PlayerAvatar value={p.emoji} size={28} />
               </div>
             ))}
           </div>
-          <div style={{ minWidth: 64 }} />
+          <div style={{ minWidth: 44 }} />
           {/* B-side voters */}
-          <div className="flex flex-wrap gap-1 justify-end">
+          <div className="flex flex-wrap gap-1 justify-start" style={{ width: 150 }}>
             {bVoters.map((p, i) => (
               <div key={i} title={p.name} style={{ filter: bWinner ? 'none' : 'grayscale(1) opacity(0.5)' }}>
                 <PlayerAvatar value={p.emoji} size={28} />

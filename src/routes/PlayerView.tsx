@@ -8,7 +8,7 @@ import { useRoomStore, selectAmHost } from '../stores/useRoomStore'
 import { usePlayerStore } from '../stores/usePlayerStore'
 import { getMatchupsForRound, totalRounds } from '../lib/bracket'
 import { submitVote, joinRoom } from '../firebase/room'
-import { playSfx, vibrate, enableAudio, setMuted } from '../lib/audio'
+import { playSfx, vibrate, enableAudio, setMuted, setVolume, getVolume } from '../lib/audio'
 import PlayerAvatar from '../components/ui/PlayerAvatar'
 import BracketBoard from '../components/bracket/BracketBoard'
 import BracketMiniMap from '../components/bracket/BracketMiniMap'
@@ -279,7 +279,7 @@ export default function PlayerView() {
           <button
             onClick={() => { void handleSubmit() }}
             disabled={submitted || myPicksCount === 0}
-            className="px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto"
+            className="px-8 py-3 font-body font-bold text-sm transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto whitespace-nowrap"
             style={{
               background: allPicked && !submitted ? '#111111' : '#111111',
               color: '#ffffff',
@@ -322,7 +322,7 @@ function Centered({ children }: { children: React.ReactNode }) {
 
 function Header({
   code,
-  title: _title,
+  title,
   roundLabel,
   round,
   totalRounds,
@@ -333,7 +333,7 @@ function Header({
   showTimer,
 }: {
   code: string
-  title: string
+  title: string  // kept for header display
   roundLabel: string
   round: number
   totalRounds: number
@@ -344,19 +344,23 @@ function Header({
   showTimer: boolean
 }) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
+    <header className="fixed top-0 left-0 right-0 z-10 px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-none"
       style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
     >
+      {/* Left: logo + title + round */}
       <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
-        <RoomCodeBadge code={code} size="sm" />
-      </div>
-      <div className="flex flex-col items-center gap-0.5 pointer-events-auto">
-        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7 }} />
-        <div className="font-body text-xs font-bold hidden sm:block" style={{ color: 'rgba(17,17,17,0.45)' }}>
-          {roundLabel} · round {round}/{totalRounds}
+        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7, flexShrink: 0 }} />
+        <div className="min-w-0">
+          <div className="font-poster text-base leading-tight truncate" style={{ color: '#111111' }}>
+            {title}
+          </div>
+          <div className="font-body text-xs" style={{ color: 'rgba(17,17,17,0.45)' }}>
+            {roundLabel} · round {round}/{totalRounds}
+          </div>
         </div>
       </div>
-      <div className="flex items-center gap-3 pointer-events-auto">
+      {/* Right: room code + timer + volume */}
+      <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
         {showTimer && endsAt && (
           <div
             className="p-1"
@@ -370,20 +374,42 @@ function Header({
             <TimerRing endsAt={endsAt} size={48} totalSeconds={roundTimerSeconds} />
           </div>
         )}
-        <button
-          onClick={onMuteToggle}
-          className="text-xl px-2.5 py-1.5"
-          style={{
-            background: '#f8f8f8',
-            border: '1px solid rgba(17,17,17,0.1)',
-            borderRadius: '8px',
-          }}
-          aria-label={muted ? 'Unmute' : 'Mute'}
-        >
-          {muted ? '🔇' : '🔊'}
-        </button>
+        <RoomCodeBadge code={code} size="sm" />
+        <VolumeControl muted={muted} onMuteToggle={onMuteToggle} />
       </div>
     </header>
+  )
+}
+
+function VolumeControl({ muted, onMuteToggle }: { muted: boolean; onMuteToggle: () => void }) {
+  const [vol, setVol] = useState(() => getVolume())
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={onMuteToggle}
+        className="text-lg px-2 py-1.5 flex-shrink-0"
+        style={{ background: '#f8f8f8', border: '1px solid rgba(17,17,17,0.1)', borderRadius: '8px' }}
+        aria-label={muted ? 'Unmute' : 'Mute'}
+      >
+        {muted ? '🔇' : vol > 0.5 ? '🔊' : '🔉'}
+      </button>
+      {!muted && (
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.05}
+          value={vol}
+          onChange={(e) => {
+            const v = parseFloat(e.target.value)
+            setVol(v)
+            setVolume(v)
+          }}
+          style={{ width: 72, accentColor: '#111111' }}
+          aria-label="Volume"
+        />
+      )}
+    </div>
   )
 }
 

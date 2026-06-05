@@ -16,7 +16,7 @@ import {
   crownChampion,
   submitVote,
 } from '../firebase/room'
-import { enableAudio, playSfx, setMuted } from '../lib/audio'
+import { enableAudio, playSfx, setMuted, setVolume, getVolume } from '../lib/audio'
 import BracketBoard from '../components/bracket/BracketBoard'
 import BracketMiniMap from '../components/bracket/BracketMiniMap'
 import SeedCard from '../components/bracket/SeedCard'
@@ -181,19 +181,24 @@ export default function HostView() {
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#ffffff' }}>
       <StampInkFilter />
-      <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
+      <header className="fixed top-0 left-0 right-0 z-10 px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-none"
         style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
       >
-        <div className="pointer-events-auto">
-          <RoomCodeBadge code={code ?? ''} size="md" />
-        </div>
-        <div className="text-center pointer-events-auto flex flex-col items-center gap-0.5">
-          <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 22, objectFit: 'contain', opacity: 0.75 }} />
-          <div className="font-body text-xs font-bold" style={{ color: 'rgba(17,17,17,0.5)' }}>
-            {roundLabel} · {phaseLabel}
+        {/* Left: logo + title + round */}
+        <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
+          <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7, flexShrink: 0 }} />
+          <div className="min-w-0">
+            <div className="font-poster text-base leading-tight truncate" style={{ color: '#111111' }}>
+              {room.meta.title}
+            </div>
+            <div className="font-body text-xs" style={{ color: 'rgba(17,17,17,0.45)' }}>
+              {roundLabel} · {phaseLabel}
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3 pointer-events-auto">
+        {/* Right: room code + timer + volume */}
+        <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
+          <RoomCodeBadge code={code ?? ''} size="sm" />
           {phase?.current === 'voting' && phase.endsAt && (
             <div
               className="p-1"
@@ -211,23 +216,7 @@ export default function HostView() {
               />
             </div>
           )}
-          <button
-            onClick={() => {
-              const v = !muted
-              setStoreMuted(v)
-              setMuted(v)
-            }}
-            className="text-2xl px-2 py-1"
-            style={{
-              background: '#ffffff',
-              border: '1px solid rgba(17, 17, 17, 0.3)',
-              boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
-              transform: 'rotate(2deg)',
-            }}
-            aria-label={muted ? 'Unmute' : 'Mute'}
-          >
-            {muted ? '🔇' : '🔊'}
-          </button>
+          <HostVolumeControl muted={muted} onMuteToggle={() => { const v = !muted; setStoreMuted(v); setMuted(v) }} />
         </div>
       </header>
 
@@ -375,6 +364,38 @@ export default function HostView() {
   )
 }
 
+function HostVolumeControl({ muted, onMuteToggle }: { muted: boolean; onMuteToggle: () => void }) {
+  const [vol, setVol] = useState(() => getVolume())
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={onMuteToggle}
+        className="text-lg px-2 py-1.5 flex-shrink-0"
+        style={{ background: '#f8f8f8', border: '1px solid rgba(17,17,17,0.1)', borderRadius: '8px' }}
+        aria-label={muted ? 'Unmute' : 'Mute'}
+      >
+        {muted ? '🔇' : vol > 0.5 ? '🔊' : '🔉'}
+      </button>
+      {!muted && (
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.05}
+          value={vol}
+          onChange={(e) => {
+            const v = parseFloat(e.target.value)
+            setVol(v)
+            setVolume(v)
+          }}
+          style={{ width: 72, accentColor: '#111111' }}
+          aria-label="Volume"
+        />
+      )}
+    </div>
+  )
+}
+
 function labelForRound(round: number, totalRounds: number): string {
   const remaining = totalRounds - round
   if (remaining === 0) return 'Championship'
@@ -433,22 +454,13 @@ function LobbyView({
       exit={{ opacity: 0 }}
       className="text-center py-8"
     >
-      <div className="flex justify-center items-center gap-6 mb-8">
-        <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 36, objectFit: 'contain', opacity: 0.7 }} />
-        <div className="text-left">
-          <div
-            className="font-body text-xl"
-            style={{ color: 'rgba(17, 17, 17, 0.75)' }}
-          >
-            you're hosting!
-          </div>
-          <h2
-            className="font-poster text-4xl sm:text-5xl"
-            style={{ color: '#111111' }}
-          >
-            {room.meta.title}
-          </h2>
+      <div className="flex flex-col items-center gap-2 mb-8">
+        <div className="font-body text-base" style={{ color: 'rgba(17,17,17,0.55)' }}>
+          you're hosting!
         </div>
+        <h2 className="font-poster text-4xl sm:text-5xl" style={{ color: '#111111' }}>
+          {room.meta.title}
+        </h2>
       </div>
 
       <p

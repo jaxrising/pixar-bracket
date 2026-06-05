@@ -29,9 +29,23 @@ const SFX_URLS: Record<SfxKey, string> = {
 
 const cache = new Map<SfxKey, HTMLAudioElement>()
 let enabled = false
+let volume = (() => {
+  if (typeof localStorage === 'undefined') return 0.7
+  return parseFloat(localStorage.getItem('pixar-bracket:volume') ?? '0.7')
+})()
+
+export function setVolume(v: number) {
+  volume = Math.max(0, Math.min(1, v))
+  try { localStorage.setItem('pixar-bracket:volume', String(volume)) } catch { /* ignore */ }
+  if (_music) _music.volume = volume * 0.5 // music quieter than SFX
+}
+
+export function getVolume() { return volume }
 let muted = (() => {
-  if (typeof localStorage === 'undefined') return false
-  return localStorage.getItem('pixar-bracket:muted') === '1'
+  if (typeof localStorage === 'undefined') return true
+  const stored = localStorage.getItem('pixar-bracket:muted')
+  if (stored === null) return true // default muted
+  return stored === '1'
 })()
 
 // Background music
@@ -43,7 +57,7 @@ function getMusic(): HTMLAudioElement | null {
   if (!_music) {
     _music = new Audio(`${BASE}audio/pixar-bracket-theme.mp3`)
     _music.loop = true
-    _music.volume = 0.35
+    _music.volume = volume * 0.5
   }
   return _music
 }
@@ -117,13 +131,13 @@ function load(key: SfxKey): HTMLAudioElement | null {
   }
 }
 
-export function playSfx(key: SfxKey, volume = 0.6) {
+export function playSfx(key: SfxKey, sfxLevel = 0.6) {
   if (!enabled || muted) return
   const base = load(key)
   if (!base) return
   try {
     const clone = base.cloneNode() as HTMLAudioElement
-    clone.volume = volume
+    clone.volume = volume * sfxLevel
     void clone.play().catch(() => {
       // autoplay blocked - silently ignore
     })

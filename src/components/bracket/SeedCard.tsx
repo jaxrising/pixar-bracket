@@ -80,7 +80,7 @@ export default function SeedCard({
           ? { type: 'spring', stiffness: 80, damping: 14, mass: 1.2, delay: 0.6 }
           : { type: 'spring', stiffness: 220, damping: 20 }
       }
-      className={`${sizing.width} ${sizing.aspect} relative text-left flex flex-col disabled:cursor-default mx-auto`}
+      className={`${sizing.width} ${sizing.aspect} relative text-left flex flex-col disabled:cursor-default`}
       style={{
         background: 'transparent',
         border: 'none',
