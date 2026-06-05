@@ -22,6 +22,14 @@ export const AVATARS: { id: string; src: string }[] = Object.entries(avatarModul
     return na - nb
   })
 
+// Preload all avatar images immediately when module loads
+if (typeof window !== 'undefined') {
+  AVATARS.forEach(({ src }) => {
+    const img = new Image()
+    img.src = src
+  })
+}
+
 /** Returns the img src for an "avatar:N" value, or null for plain emoji */
 export function resolveAvatarSrc(value: string): string | null {
   if (!value.startsWith('avatar:')) return null
@@ -64,6 +72,8 @@ export default function AvatarPicker({ value, onChange }: Props) {
               src={avatar.src}
               alt=""
               draggable={false}
+              loading="eager"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',
