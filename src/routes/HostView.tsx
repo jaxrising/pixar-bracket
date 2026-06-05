@@ -184,15 +184,15 @@ export default function HostView() {
       <header className="fixed top-0 left-0 right-0 z-10 px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-none"
         style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
       >
-        {/* Left: logo + title + round */}
+        {/* Left: logo + round title + phase */}
         <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
           <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7, flexShrink: 0 }} />
           <div className="min-w-0">
-            <div className="font-poster text-base leading-tight truncate" style={{ color: '#111111' }}>
-              {room.meta.title}
+            <div className="font-poster text-xl leading-tight truncate" style={{ color: '#111111' }}>
+              {phase?.current === 'lobby' ? room.meta.title : roundLabel}
             </div>
             <div className="font-body text-xs" style={{ color: 'rgba(17,17,17,0.45)' }}>
-              {roundLabel} · {phaseLabel}
+              {phaseLabel}
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function HostView() {
 
         {/* MATCHUPS REGION (left half of the scene) */}
         <main
-          className="px-4 pt-16 pb-24 mx-auto flex flex-col"
+          className="px-4 pt-20 pb-24 mx-auto flex flex-col"
           style={{ width: '50%', flexShrink: 0, maxWidth: 'none' }}
         >
           <div className="max-w-7xl w-full mx-auto flex-1">
@@ -247,14 +247,18 @@ export default function HostView() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <RoundHeader label={roundLabel} subtitle="voting open — votes rolling in live" />
-                  <div className="mb-6 flex justify-end">
-                    <PlayerRoster
-                      players={room.players}
-                      presence={room.presence}
-                      votedUids={votedUids}
-                      totalToVote={currentRoundMatchups.length}
-                    />
+                  <div className="flex items-center justify-between gap-6 mb-6">
+                    <p className="font-body text-base" style={{ color: 'rgba(17,17,17,0.55)' }}>
+                      voting open — votes rolling in live
+                    </p>
+                    <div className="flex-shrink-0">
+                      <PlayerRoster
+                        players={room.players}
+                        presence={room.presence}
+                        votedUids={votedUids}
+                        totalToVote={currentRoundMatchups.length}
+                      />
+                    </div>
                   </div>
 
                   <BracketBoard
@@ -275,10 +279,9 @@ export default function HostView() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <RoundHeader
-                    label={`revealing the ${roundLabel.toLowerCase()}`}
-                    subtitle={`${revealCursor} of ${currentRoundMatchups.length} revealed`}
-                  />
+                  <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>
+                    {revealCursor} of {currentRoundMatchups.length} revealed
+                  </p>
                   <BracketBoard
                     bracket={room.bracket}
                     votes={room.votes}
@@ -301,10 +304,9 @@ export default function HostView() {
                   exit={{ opacity: 0 }}
                   className="text-center py-6"
                 >
-                  <RoundHeader
-                    label={`${roundLabel.toLowerCase()} — in the books`}
-                    subtitle={!isLastRound ? 'next up' : 'ready to crown the goat?'}
-                  />
+                  <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>
+                    {!isLastRound ? 'next up' : 'ready to crown the goat?'}
+                  </p>
                   {!isLastRound && (
                     <BracketBoard
                       bracket={room.bracket}
@@ -331,7 +333,7 @@ export default function HostView() {
           className="px-4 pt-16 pb-24 flex flex-col items-center"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <RoundHeader label="the whole bracket" />
+          <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>the whole bracket</p>
           <div className="mt-6 w-full px-2">
             <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
@@ -417,28 +419,6 @@ function Centered({ children }: { children: React.ReactNode }) {
   )
 }
 
-function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) {
-  return (
-    <div className="mb-6 text-center overflow-visible pb-2">
-      <div className="inline-block relative">
-        <h2
-          className="font-poster text-4xl sm:text-5xl"
-          style={{ color: '#111111' }}
-        >
-          {label}
-        </h2>
-      </div>
-      {subtitle && (
-        <p
-          className="font-body text-xl mt-2"
-          style={{ color: 'rgba(17, 17, 17, 0.75)' }}
-        >
-          {subtitle}
-        </p>
-      )}
-    </div>
-  )
-}
 
 function LobbyView({
   code,

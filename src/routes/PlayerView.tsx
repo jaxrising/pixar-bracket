@@ -184,10 +184,9 @@ export default function PlayerView() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <RoundHeader
-                    label={roundLabel}
-                    subtitle={submitted ? 'picks locked in — waiting for results…' : 'tap a movie to vote. tap again to deselect.'}
-                  />
+                  <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>
+                    {submitted ? 'picks locked in — waiting for results…' : 'tap a movie to vote. tap again to deselect.'}
+                  </p>
                   <div className="mb-5 flex justify-end">
                     <PicksProgress count={myPicksCount} total={currentRoundMatchups.length} />
                   </div>
@@ -209,18 +208,11 @@ export default function PlayerView() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <RoundHeader
-                    label={
-                      phase.current === 'round_complete'
-                        ? `${roundLabel.toLowerCase()} done`
-                        : `revealing the ${roundLabel.toLowerCase()}`
-                    }
-                    subtitle={
-                      phase.current === 'round_complete'
-                        ? 'waiting for host to kick off the next round…'
-                        : 'eyes on the big screen 📺'
-                    }
-                  />
+                  <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>
+                    {phase.current === 'round_complete'
+                      ? 'waiting for host to kick off the next round…'
+                      : 'eyes on the big screen 📺'}
+                  </p>
 
                   <BracketBoard
                     bracket={room.bracket}
@@ -249,7 +241,7 @@ export default function PlayerView() {
           className="px-4 pt-16 pb-24 flex flex-col items-center"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <RoundHeader label="the whole bracket" />
+          <p className="font-body text-base mb-4" style={{ color: 'rgba(17,17,17,0.55)' }}>the whole bracket</p>
           <div className="mt-6 w-full px-2">
             <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
           </div>
@@ -329,7 +321,7 @@ function Centered({ children }: { children: React.ReactNode }) {
 
 function Header({
   code,
-  title,
+  title: _title,
   roundLabel,
   round,
   totalRounds,
@@ -354,15 +346,15 @@ function Header({
     <header className="fixed top-0 left-0 right-0 z-10 px-4 py-2.5 flex items-center justify-between gap-4 pointer-events-none"
       style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
     >
-      {/* Left: logo + title + round */}
+      {/* Left: logo + round title */}
       <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
         <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7, flexShrink: 0 }} />
         <div className="min-w-0">
-          <div className="font-poster text-base leading-tight truncate" style={{ color: '#111111' }}>
-            {title}
+          <div className="font-poster text-xl leading-tight truncate" style={{ color: '#111111' }}>
+            {roundLabel}
           </div>
           <div className="font-body text-xs" style={{ color: 'rgba(17,17,17,0.45)' }}>
-            {roundLabel} · round {round}/{totalRounds}
+            round {round}/{totalRounds}
           </div>
         </div>
       </div>
@@ -420,22 +412,6 @@ function VolumeControl({ muted, onMuteToggle }: { muted: boolean; onMuteToggle: 
   )
 }
 
-function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) {
-  return (
-    <div className="mb-5 text-center overflow-visible pb-2">
-      <div className="inline-block relative">
-        <h2 className="font-poster text-3xl sm:text-4xl" style={{ color: '#111111' }}>
-          {label}
-        </h2>
-      </div>
-      {subtitle && (
-        <p className="font-body text-lg mt-2" style={{ color: 'rgba(17, 17, 17, 0.8)' }}>
-          {subtitle}
-        </p>
-      )}
-    </div>
-  )
-}
 
 function PicksProgress({ count, total }: { count: number; total: number }) {
   const pct = total === 0 ? 0 : (count / total) * 100
