@@ -2,6 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Restore path redirected via 404.html
+      (function() {
+        var p = window.location.search.match(/[?&]p=([^&]*)/);
+        if (p) {
+          var path = '/' + decodeURIComponent(p[1]).replace(/~and~/g, '&');
+          var q = window.location.search.match(/[?&]q=([^&]*)/);
+          var query = q ? '?' + decodeURIComponent(q[1]).replace(/~and~/g, '&') : '';
+          window.history.replaceState(null, null, path + query + window.location.hash);
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#102efe" />
     <title>Pixar GOAT Bracket</title>
