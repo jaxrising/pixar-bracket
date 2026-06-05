@@ -258,8 +258,15 @@ export default function PlayerView() {
 
       {/* Sticky bottom bar — voting + bracket toggle */}
       {(phase?.current === 'voting' || canToggleView) && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3"
-          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
+        <div className="fixed bottom-0 left-0 right-0 z-20 flex items-center justify-between gap-4"
+          style={{
+            background: 'rgba(255,255,255,0.92)',
+            backdropFilter: 'blur(8px)',
+            borderTop: '1px solid rgba(17,17,17,0.08)',
+            boxShadow: '0 -2px 8px rgba(0,0,0,0.06)',
+            padding: '12px 20px',
+            paddingBottom: 'max(12px, env(safe-area-inset-bottom, 12px))',
+          }}
         >
           {/* Bracket toggle — always visible when content allows */}
           <BracketViewCard
@@ -279,16 +286,16 @@ export default function PlayerView() {
           <button
             onClick={() => { void handleSubmit() }}
             disabled={submitted || myPicksCount === 0}
-            className="px-8 py-3 font-body font-bold text-sm transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto whitespace-nowrap"
+            className="font-body font-black text-sm transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto whitespace-nowrap"
             style={{
-              background: allPicked && !submitted ? '#111111' : '#111111',
+              background: '#111111',
               color: '#ffffff',
               border: 'none',
-              borderRadius: '8px',
-              letterSpacing: '0.02em',
-              boxShadow: allPicked && !submitted
-                ? '0 4px 14px rgba(17,17,17,0.4)'
-                : '0 4px 14px rgba(17,17,17,0.25)',
+              borderRadius: '999px',
+              padding: '14px 28px',
+              minHeight: '52px',
+              letterSpacing: '0.01em',
+              boxShadow: '0 4px 14px rgba(17,17,17,0.2)',
             }}
           >
             {submitted ? '✓ submitted' : allPicked ? 'Lock in picks →' : 'Submit picks →'}
