@@ -7,7 +7,7 @@ import { generateRoomCode, normalizeRoomCode, isValidRoomCode } from '../lib/roo
 import { createRoom } from '../firebase/room'
 import { getRoomService, isLocalMode } from '../firebase'
 import { getTheme, DEFAULT_THEME_ID, THEMES } from '../data/themes'
-import AvatarPicker, { AVATARS } from '../components/ui/AvatarPicker'
+import AvatarPicker from '../components/ui/AvatarPicker'
 import LuxoLamp from '../components/shared/LuxoLamp'
 import Pushpin from '../components/shared/Pushpin'
 import Tape from '../components/shared/Tape'

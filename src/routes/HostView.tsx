@@ -6,7 +6,7 @@ import { useRoomSubscription } from '../hooks/useRoomSubscription'
 import { usePresence } from '../hooks/usePresence'
 import { useRoomStore, selectAmHost } from '../stores/useRoomStore'
 import { usePlayerStore } from '../stores/usePlayerStore'
-import { getSeedById, totalRounds, getMatchupsForRound } from '../lib/bracket'
+import { totalRounds, getMatchupsForRound } from '../lib/bracket'
 import {
   startRound,
   beginReveal,
