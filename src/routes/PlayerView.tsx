@@ -529,6 +529,10 @@ function DoneView({
   room: NonNullable<ReturnType<typeof useRoomStore.getState>['room']>
   totalRoundCount: number
 }) {
+  useEffect(() => {
+    playSfx('confetti', 0.9)
+  }, [])
+
   const finalMatchup = Object.values(
     room.bracket.rounds[String(totalRoundCount)]?.matchups ?? {},
   )[0]

@@ -153,7 +153,7 @@ export default function HostView() {
     if (!code) return
     setLoading(true)
     try {
-      playSfx('crown', 0.8)
+      playSfx('confetti', 0.9)
       await crownChampion(code)
     } finally {
       setLoading(false)

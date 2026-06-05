@@ -9,6 +9,7 @@ export type SfxKey =
   | 'revealCinematic'
   | 'coinFlip'
   | 'crown'
+  | 'confetti'
   | 'join'
 
 const BASE = import.meta.env.BASE_URL
@@ -24,6 +25,7 @@ const SFX_URLS: Record<SfxKey, string> = {
   revealCinematic: `${BASE}audio/reveal-cinematic.mp3`,
   coinFlip: `${BASE}audio/coin-flip.mp3`,
   crown: `${BASE}audio/crown.mp3`,
+  confetti: `${BASE}audio/confetti.mp3`,
   join: `${BASE}audio/join.mp3`,
 }
 
