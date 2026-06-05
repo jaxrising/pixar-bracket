@@ -9,7 +9,7 @@ interface Props {
   active?: boolean
 }
 
-const PAPER_COLORS = ['#f4e8d0', '#ffd166', '#ffb627', '#c8412b', '#1b2845', '#fff4d6']
+const PAPER_COLORS = ['#f4e8d0', '#ffd166', '#ffb627', '#111111', '#111111', '#fff4d6']
 
 export default function Confetti({
   count = 100,

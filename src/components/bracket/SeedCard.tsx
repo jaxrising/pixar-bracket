@@ -60,12 +60,12 @@ export default function SeedCard({
         className={`${sizing.width} ${sizing.aspect} relative flex flex-col items-center justify-center mx-auto`}
         style={{
           background: '#f4f4f4',
-          border: '2px dashed rgba(27,40,69,0.15)',
+          border: '2px dashed rgba(17,17,17,0.15)',
           borderRadius: '8px',
         }}
       >
-        <span className="font-poster text-4xl" style={{ color: 'rgba(27,40,69,0.2)' }}>?</span>
-        <span className="font-body text-sm mt-1 font-bold" style={{ color: 'rgba(27,40,69,0.25)' }}>tbd</span>
+        <span className="font-poster text-4xl" style={{ color: 'rgba(17,17,17,0.2)' }}>?</span>
+        <span className="font-body text-sm mt-1 font-bold" style={{ color: 'rgba(17,17,17,0.25)' }}>tbd</span>
       </div>
     )
   }
@@ -90,27 +90,21 @@ export default function SeedCard({
       }
       className={`${sizing.width} ${sizing.aspect} relative text-left flex flex-col disabled:cursor-default mx-auto`}
       style={{
-        background: '#ffffff',
-        border: selected
-          ? '2px solid #c8412b'
-          : winner
-          ? '2px solid #c8412b'
-          : '1.5px solid rgba(27,40,69,0.15)',
-        borderRadius: '8px',
-        boxShadow: selected
-          ? '0 8px 24px rgba(200,65,43,0.2), 0 2px 8px rgba(0,0,0,0.08)'
-          : '0 4px 12px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06)',
-        color: '#1b2845',
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 0,
+        boxShadow: 'none',
+        color: '#111111',
         transformOrigin: 'center top',
-        padding: '4px',
-        overflow: 'hidden',
+        padding: 0,
+        overflow: 'visible',
       }}
     >
       {/* Selected indicator — clean top bar instead of sticky note */}
       {selected && !winner && !loser && (
         <div
           className="absolute top-0 left-0 right-0 z-40 pointer-events-none flex items-center justify-center py-1"
-          style={{ background: '#c8412b' }}
+          style={{ background: '#111111' }}
         >
           <span className="font-body text-xs font-black text-white uppercase tracking-widest" style={{ letterSpacing: '0.12em' }}>
             my pick
@@ -118,13 +112,30 @@ export default function SeedCard({
         </div>
       )}
 
+      {/* Blurred backdrop drop-shadow effect */}
+      {seed.poster && posterLoaded && !posterFailed && (
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `url(${seed.poster})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+            filter: 'blur(18px) brightness(0.65) saturate(1.4)',
+            transform: 'scale(1.1)',
+            zIndex: -1,
+            borderRadius: 0,
+          }}
+        />
+      )}
+
       {/* Poster fills the card */}
       <div
         className="relative w-full h-full overflow-hidden"
         style={{
-          borderRadius: '5px',
+          borderRadius: 0,
           background: seed.poster
-            ? '#1b2845'
+            ? '#111111'
             : `linear-gradient(135deg, ${seed.gradient[0]} 0%, ${seed.gradient[1]} 100%)`,
         }}
       >
@@ -174,7 +185,7 @@ export default function SeedCard({
               fontSize: sizing.pct, lineHeight: 1,
               color: '#ffb627',
               padding: '2px 8px',
-              background: 'rgba(27,40,69,0.82)',
+              background: 'rgba(17,17,17,0.82)',
               borderRadius: '4px',
             }}
           >
@@ -188,7 +199,7 @@ export default function SeedCard({
             <MarkerScribble
               variant="x"
               size={size === 'xl' ? 280 : size === 'lg' ? 200 : size === 'md' ? 150 : 110}
-              color="#c8412b"
+              color="#111111"
             />
           </div>
         )}

@@ -16,20 +16,20 @@ export default function RoomCodeBadge({ code, size = 'md' }: Props) {
       className={`inline-flex flex-col ${dims.card}`}
       style={{
         background: '#ffffff',
-        border: '1.5px solid #1b2845',
+        border: '1.5px solid #111111',
         borderRadius: '6px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
       }}
     >
       <div
         className={`${dims.label} font-body font-bold uppercase`}
-        style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.12em' }}
+        style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.12em' }}
       >
         room
       </div>
       <div
         className={`font-poster ${dims.code} leading-none mt-0.5`}
-        style={{ color: '#1b2845', letterSpacing: size === 'lg' ? '0.18em' : '0.12em' }}
+        style={{ color: '#111111', letterSpacing: size === 'lg' ? '0.18em' : '0.12em' }}
       >
         {code}
       </div>

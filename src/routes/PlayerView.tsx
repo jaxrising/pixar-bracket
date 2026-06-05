@@ -11,14 +11,12 @@ import { submitVote, joinRoom } from '../firebase/room'
 import { playSfx, vibrate, enableAudio, setMuted } from '../lib/audio'
 import PlayerAvatar from '../components/ui/PlayerAvatar'
 import BracketBoard from '../components/bracket/BracketBoard'
-import BracketMiniMap from '../components/bracket/BracketMiniMap'
 import BracketViewCard from '../components/bracket/BracketViewCard'
 import SeedCard from '../components/bracket/SeedCard'
 import TimerRing from '../components/player/TimerRing'
 import RoomCodeBadge from '../components/shared/RoomCodeBadge'
 import Confetti from '../components/shared/Confetti'
 import { StampInkFilter } from '../components/shared/RubberStamp'
-import MarkerScribble from '../components/shared/MarkerScribble'
 import CorkboardBackground from '../components/shared/CorkboardBackground'
 
 export default function PlayerView() {
@@ -242,68 +240,64 @@ export default function PlayerView() {
               )}
             </AnimatePresence>
 
-            {canToggleView && (
-              <div className="mt-12 flex justify-center">
-                <BracketViewCard
-                  onClick={() => {
-                    setView('bracket')
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }}
-                  variant="open"
-                />
-              </div>
-            )}
           </div>
         </main>
 
-        {/* BRACKET OVERVIEW REGION */}
+        {/* BRACKET OVERVIEW REGION — mirrors host view */}
         <main
-          className="px-4 pt-16 pb-10 flex flex-col items-center"
+          className="px-4 pt-16 pb-24 flex flex-col"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <RoundHeader
-            label="the whole bracket"
-            subtitle="every matchup, pinned to the board"
-          />
-          <div className="mt-6 mb-8 w-full px-4">
-            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
-          </div>
-          <div className="mt-6">
-            <BracketViewCard
-              onClick={() => {
-                setView('matchups')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
-              variant="back"
+          <div className="max-w-7xl w-full mx-auto">
+            <RoundHeader label="the whole bracket" />
+            <BracketBoard
+              bracket={room.bracket}
+              votes={room.votes}
+              currentRound={phase?.round ?? 1}
+              myVotes={myVotes}
+              onPick={() => {}}
+              players={room.players}
+              showVoteBars={phase?.current === 'revealing' || phase?.current === 'round_complete'}
+              revealed={phase?.current === 'revealing' || phase?.current === 'round_complete'}
+              revealCursor={phase?.revealCursor ?? currentRoundMatchups.length}
             />
           </div>
         </main>
       </motion.div>
 
-      {/* Sticky submit bar — only during voting and not yet submitted */}
-      {phase?.current === 'voting' && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3 pointer-events-none"
-          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
+      {/* Sticky bottom bar — voting + bracket toggle */}
+      {(phase?.current === 'voting' || canToggleView) && (
+        <div className="fixed bottom-0 left-0 right-0 z-20 px-5 py-4 flex items-center justify-between gap-3"
+          style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 -2px 8px rgba(0,0,0,0.06)' }}
         >
-          <div
+          {/* Bracket toggle — always visible when content allows */}
+          <BracketViewCard
+            onClick={() => {
+              setView(view === 'bracket' ? 'matchups' : 'bracket')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            variant={view === 'bracket' ? 'back' : 'open'}
+          />
+
+          {phase?.current === 'voting' && <div
             className="font-body text-sm font-bold pointer-events-auto"
-            style={{ color: submitted ? '#c8412b' : 'rgba(27,40,69,0.45)' }}
+            style={{ color: submitted ? '#111111' : 'rgba(17,17,17,0.45)' }}
           >
             {submitted ? '✓ picks locked' : `${myPicksCount} of ${currentRoundMatchups.length} picked`}
-          </div>
+          </div>}
           <button
             onClick={() => { void handleSubmit() }}
             disabled={submitted || myPicksCount === 0}
             className="px-6 py-2.5 font-poster text-base transition-all hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed pointer-events-auto"
             style={{
-              background: allPicked && !submitted ? '#c8412b' : '#1b2845',
+              background: allPicked && !submitted ? '#111111' : '#111111',
               color: '#ffffff',
               border: 'none',
               borderRadius: '8px',
               letterSpacing: '0.02em',
               boxShadow: allPicked && !submitted
-                ? '0 4px 14px rgba(200,65,43,0.4)'
-                : '0 4px 14px rgba(27,40,69,0.25)',
+                ? '0 4px 14px rgba(17,17,17,0.4)'
+                : '0 4px 14px rgba(17,17,17,0.25)',
             }}
           >
             {submitted ? '✓ submitted' : allPicked ? 'Lock in picks →' : 'Submit picks →'}
@@ -328,7 +322,7 @@ function Centered({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="min-h-screen flex items-center justify-center font-body text-2xl"
-      style={{ color: '#1b2845' }}
+      style={{ color: '#111111' }}
     >
       {children}
     </div>
@@ -360,14 +354,14 @@ function Header({
 }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
-      style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+      style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
     >
       <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
         <RoomCodeBadge code={code} size="sm" />
       </div>
       <div className="flex flex-col items-center gap-0.5 pointer-events-auto">
         <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 20, objectFit: 'contain', opacity: 0.7 }} />
-        <div className="font-body text-xs font-bold hidden sm:block" style={{ color: 'rgba(27,40,69,0.45)' }}>
+        <div className="font-body text-xs font-bold hidden sm:block" style={{ color: 'rgba(17,17,17,0.45)' }}>
           {roundLabel} · round {round}/{totalRounds}
         </div>
       </div>
@@ -377,7 +371,7 @@ function Header({
             className="p-1"
             style={{
               background: '#ffffff',
-              border: '1px solid rgba(27, 40, 69, 0.2)',
+              border: '1px solid rgba(17, 17, 17, 0.2)',
               borderRadius: '50%',
               boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
             }}
@@ -390,7 +384,7 @@ function Header({
           className="text-xl px-2.5 py-1.5"
           style={{
             background: '#f8f8f8',
-            border: '1px solid rgba(27,40,69,0.1)',
+            border: '1px solid rgba(17,17,17,0.1)',
             borderRadius: '8px',
           }}
           aria-label={muted ? 'Unmute' : 'Mute'}
@@ -404,17 +398,14 @@ function Header({
 
 function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) {
   return (
-    <div className="mb-5 text-center">
-      <div className="inline-block relative" style={{ transform: 'rotate(-1deg)' }}>
-        <h2 className="font-poster text-3xl sm:text-4xl" style={{ color: '#1b2845' }}>
+    <div className="mb-5 text-center overflow-visible pb-2">
+      <div className="inline-block relative">
+        <h2 className="font-poster text-3xl sm:text-4xl" style={{ color: '#111111' }}>
           {label}
         </h2>
-        <div className="mt-1 flex justify-center">
-          <MarkerScribble variant="underline" size={180} color="#c8412b" animate={false} />
-        </div>
       </div>
       {subtitle && (
-        <p className="font-body text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
+        <p className="font-body text-lg mt-2" style={{ color: 'rgba(17, 17, 17, 0.8)' }}>
           {subtitle}
         </p>
       )}
@@ -429,19 +420,19 @@ function PicksProgress({ count, total }: { count: number; total: number }) {
       className="px-4 py-2"
       style={{
         background: '#ffffff',
-        border: '1.5px solid #1b2845',
+        border: '1.5px solid #111111',
         borderRadius: 4,
         boxShadow: '0 4px 8px rgba(0,0,0,0.25)',
         transform: 'rotate(1deg)',
       }}
     >
-      <div className="font-body text-base" style={{ color: '#1b2845' }}>
-        {count} <span style={{ color: 'rgba(27,40,69,0.6)' }}>of {total} picked</span>
+      <div className="font-body text-base" style={{ color: '#111111' }}>
+        {count} <span style={{ color: 'rgba(17,17,17,0.6)' }}>of {total} picked</span>
       </div>
-      <div className="w-28 h-1.5 mt-1 overflow-hidden" style={{ background: 'rgba(27,40,69,0.15)' }}>
+      <div className="w-28 h-1.5 mt-1 overflow-hidden" style={{ background: 'rgba(17,17,17,0.15)' }}>
         <div
           className="h-full transition-all"
-          style={{ width: `${pct}%`, background: '#c8412b' }}
+          style={{ width: `${pct}%`, background: '#111111' }}
         />
       </div>
     </div>
@@ -463,23 +454,23 @@ function LobbyView({
       exit={{ opacity: 0 }}
       className="flex-1 px-4 py-10 max-w-2xl mx-auto w-full text-center"
     >
-      <h2 className="font-poster text-4xl mb-2" style={{ color: '#1b2845' }}>
+      <h2 className="font-poster text-4xl mb-2" style={{ color: '#111111' }}>
         {room.meta.title}
       </h2>
-      <p className="font-body text-xl mb-8" style={{ color: 'rgba(27, 40, 69, 0.8)' }}>
+      <p className="font-body text-xl mb-8" style={{ color: 'rgba(17, 17, 17, 0.8)' }}>
         waiting for the host to start…
       </p>
       <div
         className="inline-block px-5 py-4 mb-4"
         style={{
           background: '#ffffff',
-          border: '1.5px solid rgba(27,40,69,0.4)',
+          border: '1.5px solid rgba(17,17,17,0.4)',
           borderRadius: 4,
           boxShadow: '0 8px 18px -4px rgba(0,0,0,0.4)',
           transform: 'rotate(-0.5deg)',
         }}
       >
-        <div className="font-body text-base mb-3" style={{ color: '#1b2845' }}>
+        <div className="font-body text-base mb-3" style={{ color: '#111111' }}>
           {players.length} in the room
         </div>
         <div className="flex flex-wrap gap-2 justify-center">
@@ -489,24 +480,24 @@ function LobbyView({
               className="flex items-center gap-1.5 px-2.5 py-1"
               style={{
                 background: p.isHost ? '#ffd96b' : '#fff4d6',
-                border: '1px solid rgba(27,40,69,0.4)',
+                border: '1px solid rgba(17,17,17,0.4)',
                 fontFamily: 'var(--font-body)',
                 fontWeight: 700,
                 fontSize: '1rem',
-                color: '#1b2845',
+                color: '#111111',
                 transform: `rotate(${((uid.charCodeAt(0) % 6) - 3) * 0.7}deg)`,
                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
               }}
             >
               <PlayerAvatar value={p.emoji} size={22} />
               <span>{p.name}</span>
-              {p.isHost && <span style={{ color: '#c8412b' }}>★</span>}
+              {p.isHost && <span style={{ color: '#111111' }}>★</span>}
             </div>
           ))}
         </div>
       </div>
       {amHost && (
-        <p className="font-body text-lg mt-2" style={{ color: 'rgba(27, 40, 69, 0.75)' }}>
+        <p className="font-body text-lg mt-2" style={{ color: 'rgba(17, 17, 17, 0.75)' }}>
           you're the host — switch to the host view to start the game
         </p>
       )}
@@ -528,7 +519,7 @@ function DoneView({
     ? Object.values(room.bracket.seeds ?? {}).find((s) => s.id === finalMatchup.winner)
     : null
   const winnerColors = winnerSeed
-    ? [winnerSeed.gradient[0], winnerSeed.gradient[1], '#ffb627', '#f4e8d0', '#c8412b']
+    ? [winnerSeed.gradient[0], winnerSeed.gradient[1], '#ffb627', '#f4e8d0', '#111111']
     : undefined
 
   // Find all players who voted for the winner in the final
@@ -573,7 +564,7 @@ function DoneView({
           <div
             style={{
               background: '#ffffff',
-              border: '1.5px solid rgba(27,40,69,0.3)',
+              border: '1.5px solid rgba(17,17,17,0.3)',
               borderRadius: 4,
               padding: '6px 8px',
               boxShadow: '0 4px 10px rgba(0,0,0,0.35)',
@@ -584,13 +575,13 @@ function DoneView({
             }}
           >
             <PlayerAvatar value={s.player.emoji} size={40} />
-            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#1b2845', fontWeight: 700 }}>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.75rem', color: '#111111', fontWeight: 700 }}>
               {s.player.name}
             </span>
           </div>
           {/* pushpin */}
           <div style={{ position: 'absolute', top: -6, left: '50%', transform: 'translateX(-50%)' }}>
-            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#c8412b', boxShadow: '0 2px 4px rgba(0,0,0,0.4)' }} />
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#111111', boxShadow: '0 2px 4px rgba(0,0,0,0.4)' }} />
           </div>
         </motion.div>
       ))}
@@ -600,7 +591,7 @@ function DoneView({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
         className="font-body text-xl mb-3"
-        style={{ color: 'rgba(27, 40, 69, 0.85)' }}
+        style={{ color: 'rgba(17, 17, 17, 0.85)' }}
       >
         and the goat is…
       </motion.div>
@@ -610,7 +601,7 @@ function DoneView({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, type: 'spring', stiffness: 200, damping: 18 }}
         className="font-poster text-5xl sm:text-7xl mb-6"
-        style={{ color: '#1b2845' }}
+        style={{ color: '#111111' }}
       >
         {winnerSeed?.name ?? '???'}
       </motion.h1>

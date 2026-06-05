@@ -11,9 +11,9 @@
   --cork-shadow: #6a4a26;
   --cream: #f4e8d0;
   --cream-bright: #fff4d6;
-  --ink: #1b2845;
+  --ink: #111111;
   --ink-soft: #2a3760;
-  --stamp: #c8412b;
+  --stamp: #111111;
   --stamp-deep: #8b2818;
 
   /* Luxo's light — used only as lamp glow, never as UI fill */
@@ -24,11 +24,11 @@
   /* Functional aliases */
   --bg: #ffffff;
   --text: var(--ink);
-  --muted: rgba(27, 40, 69, 0.55);
+  --muted: rgba(17, 17, 17, 0.55);
   --text-on-cork: var(--cream);
   --muted-on-cork: rgba(244, 232, 208, 0.75);
 
-  --border-ink: rgba(27, 40, 69, 0.7);
+  --border-ink: rgba(17, 17, 17, 0.7);
 
   /* Paper shadows — tuned for white background (softer than cork) */
   --paper-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.18), 0 3px 8px rgba(0, 0, 0, 0.1);

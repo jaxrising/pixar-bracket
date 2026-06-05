@@ -4,7 +4,7 @@ interface Props {
 }
 
 const COLORS: Record<NonNullable<Props['color']>, { head: string; highlight: string; shadow: string }> = {
-  red: { head: '#c8412b', highlight: '#ffb09e', shadow: '#8b2818' },
+  red: { head: '#111111', highlight: '#ffb09e', shadow: '#8b2818' },
   navy: { head: '#2a3760', highlight: '#7e8cb5', shadow: '#0e1530' },
   cream: { head: '#f4e8d0', highlight: '#fff4d6', shadow: '#a88d5a' },
   yellow: { head: '#ffb627', highlight: '#fff0b0', shadow: '#9a6300' },

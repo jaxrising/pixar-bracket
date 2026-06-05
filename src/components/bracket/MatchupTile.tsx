@@ -69,7 +69,7 @@ export default function MatchupTile({
       }}
       className="relative"
     >
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center">
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-1 items-center">
         <SeedCard
           seed={aSeed}
           size={size}
@@ -82,12 +82,12 @@ export default function MatchupTile({
           disabled={disabled || revealed}
         />
         {/* marker "vs" between cards */}
-        <div className="flex flex-col items-center justify-center min-w-[64px] gap-1">
+        <div className="flex flex-col items-center justify-center min-w-[44px] gap-1">
           <span
             className="font-poster"
             style={{
               fontSize: size === 'xl' ? '5rem' : size === 'lg' ? '3.5rem' : size === 'md' ? '2.5rem' : '1.75rem',
-              color: '#1b2845',
+              color: '#111111',
               transform: 'rotate(-6deg)',
               display: 'inline-block',
               lineHeight: 1,
@@ -115,7 +115,7 @@ export default function MatchupTile({
           className="absolute -top-3 right-2 px-2 py-0.5 font-hand text-sm"
           style={{
             background: '#ffd96b',
-            color: '#1b2845',
+            color: '#111111',
             transform: 'rotate(4deg)',
             boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
           }}

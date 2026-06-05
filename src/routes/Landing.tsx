@@ -95,7 +95,7 @@ export default function Landing() {
         <h1
           className="font-poster"
           style={{
-            color: '#1b2845',
+            color: '#111111',
             fontSize: 'clamp(3.5rem, 12vw, 7rem)',
             lineHeight: 0.9,
             letterSpacing: '-0.01em',
@@ -105,14 +105,14 @@ export default function Landing() {
         </h1>
         <p
           className="font-body mt-4 text-base font-semibold"
-          style={{ color: 'rgba(27,40,69,0.5)', letterSpacing: '0.02em' }}
+          style={{ color: 'rgba(17,17,17,0.5)', letterSpacing: '0.02em' }}
         >
           Crown the greatest Pixar franchise of all time
         </p>
       </motion.div>
 
       {/* Divider */}
-      <div className="w-16 h-0.5 mb-10 mt-2" style={{ background: '#c8412b', borderRadius: 2 }} />
+      <div className="w-16 h-0.5 mb-10 mt-2" style={{ background: '#111111', borderRadius: 2 }} />
 
       {/* Practice mode notice */}
       {isLocalMode() && (
@@ -121,7 +121,7 @@ export default function Landing() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           className="font-body text-sm font-semibold mb-6 px-4 py-2"
-          style={{ color: '#c8412b', background: 'rgba(200,65,43,0.08)', border: '1px solid rgba(200,65,43,0.25)', borderRadius: '6px' }}
+          style={{ color: '#111111', background: 'rgba(17,17,17,0.08)', border: '1px solid rgba(17,17,17,0.25)', borderRadius: '6px' }}
         >
           Practice mode — add Firebase for multi-device play
         </motion.div>
@@ -135,7 +135,7 @@ export default function Landing() {
         className="w-full max-w-3xl px-8 py-8"
         style={{
           background: '#ffffff',
-          border: '1.5px solid rgba(27,40,69,0.12)',
+          border: '1.5px solid rgba(17,17,17,0.12)',
           borderRadius: '16px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
         }}
@@ -147,12 +147,12 @@ export default function Landing() {
               disabled={!ready}
               className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
-                background: '#1b2845',
+                background: '#111111',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '10px',
                 letterSpacing: '0.02em',
-                boxShadow: '0 4px 14px rgba(27,40,69,0.3)',
+                boxShadow: '0 4px 14px rgba(17,17,17,0.3)',
               }}
             >
               Start a new bracket
@@ -163,8 +163,8 @@ export default function Landing() {
               className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
                 background: 'transparent',
-                color: '#1b2845',
-                border: '1.5px solid rgba(27,40,69,0.2)',
+                color: '#111111',
+                border: '1.5px solid rgba(17,17,17,0.2)',
                 borderRadius: '10px',
                 letterSpacing: '0.02em',
               }}
@@ -179,13 +179,13 @@ export default function Landing() {
             <button
               onClick={() => { setMode('menu'); setError(null) }}
               className="font-body text-sm font-bold self-start flex items-center gap-1"
-              style={{ color: 'rgba(27,40,69,0.5)' }}
+              style={{ color: 'rgba(17,17,17,0.5)' }}
             >
               ← back
             </button>
 
             <div>
-              <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+              <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.08em' }}>
                 Your name
               </label>
               <input
@@ -196,15 +196,15 @@ export default function Landing() {
                 className="w-full px-4 py-3 text-xl font-body font-bold outline-none"
                 style={{
                   background: '#f8f8f8',
-                  border: '1.5px solid rgba(27,40,69,0.12)',
+                  border: '1.5px solid rgba(17,17,17,0.12)',
                   borderRadius: '8px',
-                  color: '#1b2845',
+                  color: '#111111',
                 }}
               />
             </div>
 
             <div>
-              <label className="block font-body text-sm font-bold mb-3 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+              <label className="block font-body text-sm font-bold mb-3 uppercase" style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.08em' }}>
                 Pixar your avatar
               </label>
               <AvatarPicker value={emoji} onChange={setEmoji} />
@@ -212,7 +212,7 @@ export default function Landing() {
 
             {mode === 'create' && (
               <div>
-                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.08em' }}>
                   Bracket
                 </label>
                 <select
@@ -221,9 +221,9 @@ export default function Landing() {
                   className="w-full px-4 py-3 font-body font-bold text-base outline-none"
                   style={{
                     background: '#f8f8f8',
-                    border: '1.5px solid rgba(27,40,69,0.12)',
+                    border: '1.5px solid rgba(17,17,17,0.12)',
                     borderRadius: '8px',
-                    color: '#1b2845',
+                    color: '#111111',
                   }}
                 >
                   {Object.values(THEMES).map((t) => (
@@ -237,7 +237,7 @@ export default function Landing() {
 
             {mode === 'join' && (
               <div>
-                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+                <label className="block font-body text-sm font-bold mb-2 uppercase" style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.08em' }}>
                   Room code
                 </label>
                 <input
@@ -248,16 +248,16 @@ export default function Landing() {
                   className="w-full px-4 py-3 text-4xl font-poster tracking-[0.3em] text-center outline-none"
                   style={{
                     background: '#f8f8f8',
-                    border: '1.5px solid rgba(27,40,69,0.12)',
+                    border: '1.5px solid rgba(17,17,17,0.12)',
                     borderRadius: '8px',
-                    color: '#1b2845',
+                    color: '#111111',
                   }}
                 />
               </div>
             )}
 
             {error && (
-              <div className="font-body text-sm font-semibold px-4 py-3" style={{ color: '#c8412b', background: 'rgba(200,65,43,0.08)', border: '1px solid rgba(200,65,43,0.2)', borderRadius: '8px' }}>
+              <div className="font-body text-sm font-semibold px-4 py-3" style={{ color: '#111111', background: 'rgba(17,17,17,0.08)', border: '1px solid rgba(17,17,17,0.2)', borderRadius: '8px' }}>
                 {error}
               </div>
             )}
@@ -267,12 +267,12 @@ export default function Landing() {
               disabled={busy || !ready}
               className="font-poster text-xl py-4 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
               style={{
-                background: '#1b2845',
+                background: '#111111',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '10px',
                 letterSpacing: '0.02em',
-                boxShadow: '0 4px 14px rgba(27,40,69,0.3)',
+                boxShadow: '0 4px 14px rgba(17,17,17,0.3)',
               }}
             >
               {busy ? '…' : mode === 'create' ? 'Create & host' : 'Join the game'}

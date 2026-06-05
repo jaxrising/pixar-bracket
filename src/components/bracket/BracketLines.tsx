@@ -66,7 +66,7 @@ export default function BracketLines({
         </filter>
       </defs>
       <g
-        stroke="#1b2845"
+        stroke="#111111"
         strokeWidth={3.5}
         strokeLinecap="round"
         strokeLinejoin="round"

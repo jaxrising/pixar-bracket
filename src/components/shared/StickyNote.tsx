@@ -48,7 +48,7 @@ export default function StickyNote({
         fontFamily: "'Caveat', cursive",
         fontWeight: 700,
         fontSize: s.font,
-        color: '#1b2845',
+        color: '#111111',
         lineHeight: 1.15,
         textAlign: 'center',
         ...style,

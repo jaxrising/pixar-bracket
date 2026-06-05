@@ -18,8 +18,6 @@ import {
 } from '../firebase/room'
 import { enableAudio, playSfx, setMuted } from '../lib/audio'
 import BracketBoard from '../components/bracket/BracketBoard'
-import BracketMiniMap from '../components/bracket/BracketMiniMap'
-import BracketViewCard from '../components/bracket/BracketViewCard'
 import SeedCard from '../components/bracket/SeedCard'
 import TimerRing from '../components/player/TimerRing'
 import HostControlBar from '../components/host/HostControlBar'
@@ -27,7 +25,6 @@ import PlayerRoster from '../components/host/PlayerRoster'
 import RoomCodeBadge from '../components/shared/RoomCodeBadge'
 import Confetti from '../components/shared/Confetti'
 import { StampInkFilter } from '../components/shared/RubberStamp'
-import MarkerScribble from '../components/shared/MarkerScribble'
 import CorkboardBackground from '../components/shared/CorkboardBackground'
 
 export default function HostView() {
@@ -127,6 +124,8 @@ export default function HostView() {
       playSfx('revealDramatic', 0.8)
       const willBeDone = revealCursor + 1 >= currentRoundMatchups.length
       if (willBeDone) {
+        // Delay so players can see the final reveal before transitioning
+        await new Promise((r) => setTimeout(r, 2000))
         const updated = useRoomStore.getState().room
         if (updated) {
           const matchups = updated.bracket.rounds[String(phase.round)]?.matchups ?? {}
@@ -182,14 +181,14 @@ export default function HostView() {
     <div className="relative min-h-screen overflow-x-hidden" style={{ background: '#ffffff' }}>
       <StampInkFilter />
       <header className="fixed top-0 left-0 right-0 z-10 px-4 py-3 flex items-start justify-between gap-3 pointer-events-none"
-        style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(27,40,69,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+        style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)', borderBottom: '1px solid rgba(17,17,17,0.08)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
       >
         <div className="pointer-events-auto">
           <RoomCodeBadge code={code ?? ''} size="md" />
         </div>
         <div className="text-center pointer-events-auto flex flex-col items-center gap-0.5">
           <img src={`${import.meta.env.BASE_URL}logo/disney-pixar-seeklogo.png`} alt="Disney · Pixar" style={{ height: 22, objectFit: 'contain', opacity: 0.75 }} />
-          <div className="font-body text-xs font-bold" style={{ color: 'rgba(27,40,69,0.5)' }}>
+          <div className="font-body text-xs font-bold" style={{ color: 'rgba(17,17,17,0.5)' }}>
             {roundLabel} · {phaseLabel}
           </div>
         </div>
@@ -199,7 +198,7 @@ export default function HostView() {
               className="p-1"
               style={{
                 background: '#ffffff',
-                border: '1px solid rgba(27, 40, 69, 0.3)',
+                border: '1px solid rgba(17, 17, 17, 0.3)',
                 borderRadius: '50%',
                 boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
               }}
@@ -220,7 +219,7 @@ export default function HostView() {
             className="text-2xl px-2 py-1"
             style={{
               background: '#ffffff',
-              border: '1px solid rgba(27, 40, 69, 0.3)',
+              border: '1px solid rgba(17, 17, 17, 0.3)',
               boxShadow: '0 3px 8px rgba(0,0,0,0.25)',
               transform: 'rotate(2deg)',
             }}
@@ -334,39 +333,26 @@ export default function HostView() {
               )}
             </AnimatePresence>
 
-            {canToggleView && (
-              <div className="mt-12 flex justify-center">
-                <BracketViewCard
-                  onClick={() => {
-                    setView('bracket')
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }}
-                  variant="open"
-                />
-              </div>
-            )}
           </div>
         </main>
 
-        {/* BRACKET OVERVIEW REGION (right half of the scene) */}
+        {/* BRACKET OVERVIEW REGION — mirrors matchup board */}
         <main
-          className="px-4 pt-16 pb-10 flex flex-col items-center"
+          className="px-4 pt-16 pb-24 flex flex-col"
           style={{ width: '50%', flexShrink: 0 }}
         >
-          <RoundHeader
-            label="the whole bracket"
-            subtitle="every matchup, pinned to the board"
-          />
-          <div className="mt-6 mb-8 w-full px-4">
-            <BracketMiniMap bracket={room.bracket} currentRound={phase?.round ?? 1} />
-          </div>
-          <div className="mt-6">
-            <BracketViewCard
-              onClick={() => {
-                setView('matchups')
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
-              variant="back"
+          <div className="max-w-7xl w-full mx-auto">
+            <RoundHeader label="the whole bracket" />
+            <BracketBoard
+              bracket={room.bracket}
+              votes={room.votes}
+              currentRound={phase?.round ?? 1}
+              myVotes={myVotes}
+              onPick={() => {}}
+              players={room.players}
+              showVoteBars={phase?.current === 'revealing' || phase?.current === 'round_complete'}
+              revealed={phase?.current === 'revealing' || phase?.current === 'round_complete'}
+              revealCursor={revealCursor}
             />
           </div>
         </main>
@@ -387,6 +373,12 @@ export default function HostView() {
         onAdvance={handleAdvance}
         onCrown={handleCrown}
         loading={loading}
+        view={view}
+        onToggleView={() => {
+          setView(view === 'bracket' ? 'matchups' : 'bracket')
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+        canToggleView={canToggleView}
       />
     </div>
   )
@@ -406,7 +398,7 @@ function Centered({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="min-h-screen flex items-center justify-center font-body text-2xl"
-      style={{ color: '#1b2845' }}
+      style={{ color: '#111111' }}
     >
       {children}
     </div>
@@ -415,22 +407,19 @@ function Centered({ children }: { children: React.ReactNode }) {
 
 function RoundHeader({ label, subtitle }: { label: string; subtitle?: string }) {
   return (
-    <div className="mb-6 text-center">
-      <div className="inline-block relative" style={{ transform: 'rotate(-1deg)' }}>
+    <div className="mb-6 text-center overflow-visible pb-2">
+      <div className="inline-block relative">
         <h2
           className="font-poster text-4xl sm:text-5xl"
-          style={{ color: '#1b2845' }}
+          style={{ color: '#111111' }}
         >
           {label}
         </h2>
-        <div className="mt-1 flex justify-center">
-          <MarkerScribble variant="underline" size={200} color="#c8412b" animate={false} />
-        </div>
       </div>
       {subtitle && (
         <p
           className="font-body text-xl mt-2"
-          style={{ color: 'rgba(27, 40, 69, 0.75)' }}
+          style={{ color: 'rgba(17, 17, 17, 0.75)' }}
         >
           {subtitle}
         </p>
@@ -458,13 +447,13 @@ function LobbyView({
         <div className="text-left">
           <div
             className="font-body text-xl"
-            style={{ color: 'rgba(27, 40, 69, 0.75)' }}
+            style={{ color: 'rgba(17, 17, 17, 0.75)' }}
           >
             you're hosting!
           </div>
           <h2
             className="font-poster text-4xl sm:text-5xl"
-            style={{ color: '#1b2845' }}
+            style={{ color: '#111111' }}
           >
             {room.meta.title}
           </h2>
@@ -473,7 +462,7 @@ function LobbyView({
 
       <p
         className="font-body text-xl mb-4"
-        style={{ color: 'rgba(27, 40, 69, 0.8)' }}
+        style={{ color: 'rgba(17, 17, 17, 0.8)' }}
       >
         share this code so friends can hop in:
       </p>
@@ -507,7 +496,7 @@ function DoneView({
     ? Object.values(room.bracket.seeds).find((s) => s.id === finalMatchup.winner)
     : null
   const winnerColors = winnerSeed
-    ? [winnerSeed.gradient[0], winnerSeed.gradient[1], '#ffb627', '#f4e8d0', '#c8412b']
+    ? [winnerSeed.gradient[0], winnerSeed.gradient[1], '#ffb627', '#f4e8d0', '#111111']
     : undefined
 
   return (
@@ -529,7 +518,7 @@ function DoneView({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
         className="font-body text-2xl mb-3"
-        style={{ color: 'rgba(27, 40, 69, 0.85)' }}
+        style={{ color: 'rgba(17, 17, 17, 0.85)' }}
       >
         and the goat is…
       </motion.div>
@@ -539,7 +528,7 @@ function DoneView({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, type: 'spring', stiffness: 200, damping: 18 }}
         className="font-poster text-6xl sm:text-8xl mb-8"
-        style={{ color: '#1b2845' }}
+        style={{ color: '#111111' }}
       >
         {winnerSeed?.name ?? '???'}
       </motion.h1>

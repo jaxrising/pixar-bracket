@@ -48,7 +48,7 @@ const PATHS: Record<Variant, { d: string; viewBox: string; width: number; height
 export default function MarkerScribble({
   variant = 'x',
   size = 100,
-  color = '#1b2845',
+  color = '#111111',
   delay = 0,
   className,
   style,

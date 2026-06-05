@@ -116,7 +116,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* connector lines */}
-        <g stroke="#1b2845" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={0.5}>
+        <g stroke="#111111" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={0.5}>
           {lines.map((d, i) => <path key={i} d={d} />)}
         </g>
 
@@ -145,9 +145,9 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
               <rect
                 width={stubW} height={stubH} rx={3}
                 fill="#ffffff"
-                stroke={isActive ? '#c8412b' : '#1b2845'}
+                stroke={isActive ? '#111111' : '#111111'}
                 strokeWidth={isActive ? 2 : 1}
-                filter={isActive ? 'drop-shadow(0 3px 6px rgba(200,65,43,0.4))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))'}
+                filter={isActive ? 'drop-shadow(0 3px 6px rgba(17,17,17,0.4))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))'}
               />
 
               {displaySeed ? (
@@ -167,7 +167,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                     textAnchor={displaySeed.poster ? 'start' : 'middle'}
                     fontSize={isFinal ? 12 : 10}
                     fontFamily="'Lato', sans-serif"
-                    fill="#c8412b"
+                    fill="#111111"
                   >
                     {displaySeed.shortName}
                   </text>
@@ -181,18 +181,18 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
                       preserveAspectRatio="xMidYMid slice" />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 - 2}
-                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#111111">
                     {seedA?.shortName ?? '?'}
                   </text>
                   {/* Divider */}
-                  <line x1={4} y1={stubH/2} x2={stubW - 4} y2={stubH/2} stroke="rgba(27,40,69,0.25)" strokeWidth={0.8} strokeDasharray="3 2" />
+                  <line x1={4} y1={stubH/2} x2={stubW - 4} y2={stubH/2} stroke="rgba(17,17,17,0.25)" strokeWidth={0.8} strokeDasharray="3 2" />
                   {/* Side B */}
                   {seedB?.poster && (
                     <image href={seedB.poster} x={2} y={2} width={imgSize - 4} height={stubH - 4}
                       preserveAspectRatio="xMidYMid slice" opacity={0.4} />
                   )}
                   <text x={imgSize + 4} y={stubH / 2 + 12}
-                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#1b2845">
+                    textAnchor="start" fontSize={9} fontFamily="'Lato', sans-serif" fill="#111111">
                     {seedB?.shortName ?? '?'}
                   </text>
                 </>
@@ -201,7 +201,7 @@ export default function BracketMiniMap({ bracket, currentRound }: Props) {
               {/* "now!" tag for active round */}
               {isActive && (
                 <text x={stubW - 2} y={-4} textAnchor="end" fontSize={10}
-                  fontFamily="'Lato', sans-serif" fontWeight={700} fill="#c8412b"
+                  fontFamily="'Lato', sans-serif" fontWeight={700} fill="#111111"
                   transform="rotate(-8, ${stubW}, 0)">
                   now!
                 </text>

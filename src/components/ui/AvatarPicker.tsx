@@ -54,7 +54,7 @@ export default function AvatarPicker({ value, onChange }: Props) {
               background: 'transparent',
               padding: 0,
               transform: selected ? 'scale(1.15)' : 'scale(1)',
-              filter: selected ? 'drop-shadow(0 4px 10px rgba(200,65,43,0.8))' : 'none',
+              filter: selected ? 'drop-shadow(0 4px 10px rgba(17,17,17,0.8))' : 'none',
               opacity: value && !selected ? 0.5 : 1,
               transition: 'transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease',
             }}

@@ -19,17 +19,17 @@ export default function PlayerRoster({ players, presence, votedUids, totalToVote
       className="px-5 py-4"
       style={{
         background: '#ffffff',
-        border: '1.5px solid rgba(27,40,69,0.12)',
+        border: '1.5px solid rgba(17,17,17,0.12)',
         borderRadius: '12px',
         boxShadow: '0 4px 14px rgba(0,0,0,0.08)',
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="font-body text-sm font-bold uppercase" style={{ color: 'rgba(27,40,69,0.45)', letterSpacing: '0.08em' }}>
+        <div className="font-body text-sm font-bold uppercase" style={{ color: 'rgba(17,17,17,0.45)', letterSpacing: '0.08em' }}>
           Players ({onlineCount})
         </div>
         {totalToVote > 0 && (
-          <div className="font-body text-sm font-bold" style={{ color: '#c8412b' }}>
+          <div className="font-body text-sm font-bold" style={{ color: '#111111' }}>
             {votedCount}/{onlineCount} done
           </div>
         )}
@@ -46,20 +46,20 @@ export default function PlayerRoster({ players, presence, votedUids, totalToVote
               transition={{ type: 'spring', stiffness: 240, damping: 14, delay: i * 0.03 }}
               className="flex items-center gap-1.5 px-2.5 py-1.5"
               style={{
-                background: voted ? 'rgba(200,65,43,0.08)' : '#f8f8f8',
-                border: voted ? '1.5px solid #c8412b' : '1px solid rgba(27,40,69,0.1)',
+                background: voted ? 'rgba(17,17,17,0.08)' : '#f8f8f8',
+                border: voted ? '1.5px solid #111111' : '1px solid rgba(17,17,17,0.1)',
                 borderRadius: '20px',
                 fontFamily: 'var(--font-body)',
                 fontWeight: 700,
                 fontSize: '0.85rem',
-                color: '#1b2845',
+                color: '#111111',
               }}
               title={online ? 'online' : 'offline'}
             >
               <PlayerAvatar value={p.emoji} size={20} />
               <span>{p.name}</span>
-              {p.isHost && <span style={{ color: '#c8412b' }}>★</span>}
-              {voted && <span style={{ color: '#c8412b', fontSize: '0.75rem' }}>✓</span>}
+              {p.isHost && <span style={{ color: '#111111' }}>★</span>}
+              {voted && <span style={{ color: '#111111', fontSize: '0.75rem' }}>✓</span>}
             </motion.div>
           )
         })}
